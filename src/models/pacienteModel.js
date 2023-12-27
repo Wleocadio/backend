@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const enderecoSchema = require ('./enderecoModel')
-
+const acessoSchema = require('./acessoModel')
 
 
 const prontuarioPaciente = new mongoose.Schema({
@@ -9,14 +9,6 @@ const prontuarioPaciente = new mongoose.Schema({
     encaminhamento: { type: String },   //  Registro de Encaminhamento ou Encerramento
     informacoesGeral: { type: String },  //  Informações Gerais
     status: { type: String }             // Para saber se o Paciente já teve alta
-})
-
-const acesso = new mongoose.Schema({
-    usuario: { type: String },
-    senha: { type: String },
-    bloqueio: { type: Boolean },
-    plano: { type: String },
-
 })
 
 const pacienteSchema = new mongoose.Schema({
@@ -28,11 +20,11 @@ const pacienteSchema = new mongoose.Schema({
     dataNascimento: { type: Date },
     sexo: { type: String },
     endereco: enderecoSchema, // Schema de endereço
+    acesso: acessoSchema, //Schema de acesso
     email: { type: String },
     contato: { type: Number },
     contatoEmergencia: { type: Number },
     prontuario: [prontuarioPaciente],
-    acesso: [acesso],
     profissionalId:{type: mongoose.Schema.Types.ObjectId, ref: 'Profissional'}, // Referência ao Profissional.
     perfilAcessoId:{type: mongoose.Schema.Types.ObjectId, ref: 'PerfilAcesso'} // Referência ao Perfil de acesso.
 })

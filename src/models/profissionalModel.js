@@ -1,19 +1,12 @@
 const mongoose = require('mongoose');
 const enderecoSchema = require ('./enderecoModel')
+const acessoSchema = require('./acessoModel')
 
 const horarioAtendimento = new mongoose.Schema({
     data: { type: String },
     horaInicio: { type: String },
     horaFim: { type: String },
     status: { type: String, }
-
-})
-
-const acesso = new mongoose.Schema({
-    usuario: { type: String },
-    senha: { type: String },
-    bloqueio: { type: Boolean },
-    plano: { type: String },
 
 })
 
@@ -28,7 +21,7 @@ const profissionalSchema = new mongoose.Schema({
         numeroRegistro: { type: String, required: true }
 
     },
-    acesso: [acesso],
+    acesso: acessoSchema,
     perfilAcessoId: { type: mongoose.Schema.Types.ObjectId, ref: 'PerfilAcesso' }, // Referência ao Perfil de acesso.
     descricao: {
         descricaoEspecialidade: { type: String },

@@ -8,14 +8,32 @@ exports.obterPaciente = async (req, res) => {
 
         // Organizar campos na ordem desejada (exemplo: _id, nomeCompleto, etc..)
         const pacientesFormatados = paciente.map(paciente => {
-            const { _id, nomeCompleto, documento, dataNascimento, sexo, endereco, email, contato, contatoEmergencia, prontuario, profissionalId
+            const { _id, 
+                nomeCompleto,
+                documento,
+                dataNascimento,
+                sexo,
+                endereco,
+                email,
+                contato,
+                contatoEmergencia,
+                prontuario,
+                profissionalId
             } = paciente._doc;
             return {
-                _id, nomeCompleto, documento, dataNascimento, sexo, endereco, email, contato, contatoEmergencia, prontuario, profissionalId
+                _id,
+                nomeCompleto,
+                documento,
+                dataNascimento,
+                sexo,
+                endereco,
+                email,
+                contato,
+                contatoEmergencia,
+                prontuario,
+                profissionalId
             };
         });
-
-
 
         res.status(200).json(pacientesFormatados);
     } catch (error) {
@@ -37,10 +55,30 @@ exports.obterPacientePorProfissional = async (req, res) => {
         }
         // Organizar campos na ordem desejada (exemplo: _id, nomeCompleto, etc..)
         const pacientesFormatados = paciente.map(paciente => {
-            const { _id, nomeCompleto, documento, dataNascimento, sexo, endereco, email, contato, contatoEmergencia, prontuario, profissionalId
+            const { _id,
+                nomeCompleto,
+                documento,
+                dataNascimento,
+                sexo,
+                endereco,
+                email,
+                contato,
+                contatoEmergencia,
+                prontuario,
+                profissionalId
             } = paciente._doc;
             return {
-                _id, nomeCompleto, documento, dataNascimento, sexo, endereco, email, contato, contatoEmergencia, prontuario, profissionalId
+                _id,
+                nomeCompleto,
+                documento,
+                dataNascimento,
+                sexo,
+                endereco,
+                email,
+                contato,
+                contatoEmergencia,
+                prontuario,
+                profissionalId
             };
         });
 

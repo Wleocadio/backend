@@ -8,10 +8,48 @@ exports.obterProfissional = async (req, res) => {
 
         // Organizar campos na ordem desejada (exemplo: _id, nomeCompleto, etc..)
         const profissionaisFormatados = profissionais.map(profissional => {
-            const { _id, nomeCompleto, documento, registroProfissional, descricao, Contato, especialidade, experiencia, formacao, descricaoPessoal, politicaRemarcacao, horarioAtendimento, valorConsulta, tempoSessao, redesSociais, avaliacoes, quantidadesAtendimentos
+            const { _id,
+                nomeCompleto,
+                documento,
+                registroProfissional,
+                acesso,
+                perfilAcessoId,
+                descricao,
+                Contato,
+                endereco,
+                especialidade,
+                experiencia,
+                formacao,
+                descricaoPessoal,
+                politicaRemarcacao,
+                horarioAtendimento,
+                valorConsulta,
+                tempoSessao,
+                redesSociais,
+                avaliacoes,
+                quantidadesAtendimentos
             } = profissional._doc;
             return {
-                _id, nomeCompleto, documento, registroProfissional, descricao, Contato, especialidade, experiencia, formacao, descricaoPessoal, politicaRemarcacao, horarioAtendimento, valorConsulta, tempoSessao, redesSociais, avaliacoes, quantidadesAtendimentos
+                _id,
+                nomeCompleto,
+                documento,
+                registroProfissional,
+                acesso,
+                perfilAcessoId,
+                descricao,
+                Contato,
+                endereco,
+                especialidade,
+                experiencia,
+                formacao,
+                descricaoPessoal,
+                politicaRemarcacao,
+                horarioAtendimento,
+                valorConsulta,
+                tempoSessao,
+                redesSociais,
+                avaliacoes,
+                quantidadesAtendimentos
             };
         });
 
@@ -46,7 +84,7 @@ exports.criarProfissional = async (req, res) => {
         quantidadesAtendimentos
     } = req.body;
 
- //Validações
+    //Validações
     // Exemplo de validação: Verifica se o e-mail é um e-mail válido
     if (Contato && Contato.email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -55,7 +93,7 @@ exports.criarProfissional = async (req, res) => {
         }
     }
     // Verifica se o e-mail já esta cadastrado
-   const emailExistente = await Profissional.findOne({ 'Contato.email': Contato.email });
+    const emailExistente = await Profissional.findOne({ 'Contato.email': Contato.email });
     if (emailExistente) {
         return res.status(400).json({ Mensagem: 'E-mail já cadastrado.' });
 

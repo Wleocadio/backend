@@ -40,7 +40,7 @@ const profissionalSchema = new mongoose.Schema({
         whatsApp: { type: Number },
         email: { type: String, required: true, unique: true }
     },
-    endereco: enderecoSchema, // Referência ao Endereço
+    endereco: enderecoSchema, // Schema de endereço
     especialidade: [{ type: String }],
     experiencia: { type: String },
     formacao: [{ type: String }],

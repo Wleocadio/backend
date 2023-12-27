@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const enderecoSchema = require ('./enderecoModel')
 
 
 
@@ -27,7 +27,7 @@ const pacienteSchema = new mongoose.Schema({
     },
     dataNascimento: { type: Date },
     sexo: { type: String },
-    endereço: { type: String },
+    endereco: enderecoSchema, // Schema de endereço
     email: { type: String },
     contato: { type: Number },
     contatoEmergencia: { type: Number },

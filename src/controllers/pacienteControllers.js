@@ -8,10 +8,10 @@ exports.obterPaciente = async (req, res) => {
 
         // Organizar campos na ordem desejada (exemplo: _id, nomeCompleto, etc..)
         const pacientesFormatados = paciente.map(paciente => {
-            const { _id, nomeCompleto, documento, dataNascimento, sexo, endereço, email, contato, contatoEmergencia, prontuario, profissionalId
+            const { _id, nomeCompleto, documento, dataNascimento, sexo, endereco, email, contato, contatoEmergencia, prontuario, profissionalId
             } = paciente._doc;
             return {
-                _id, nomeCompleto, documento, dataNascimento, sexo, endereço, email, contato, contatoEmergencia, prontuario, profissionalId
+                _id, nomeCompleto, documento, dataNascimento, sexo, endereco, email, contato, contatoEmergencia, prontuario, profissionalId
             };
         });
 
@@ -37,10 +37,10 @@ exports.obterPacientePorProfissional = async (req, res) => {
         }
         // Organizar campos na ordem desejada (exemplo: _id, nomeCompleto, etc..)
         const pacientesFormatados = paciente.map(paciente => {
-            const { _id, nomeCompleto, documento, dataNascimento, sexo, endereço, email, contato, contatoEmergencia, prontuario, profissionalId
+            const { _id, nomeCompleto, documento, dataNascimento, sexo, endereco, email, contato, contatoEmergencia, prontuario, profissionalId
             } = paciente._doc;
             return {
-                _id, nomeCompleto, documento, dataNascimento, sexo, endereço, email, contato, contatoEmergencia, prontuario, profissionalId
+                _id, nomeCompleto, documento, dataNascimento, sexo, endereco, email, contato, contatoEmergencia, prontuario, profissionalId
             };
         });
 
@@ -58,7 +58,7 @@ exports.criarPaciente = async (req, res) => {
         documento,
         dataNascimento,
         sexo,
-        endereço,
+        endereco,
         email,
         contato,
         contatoEmergencia,
@@ -90,7 +90,7 @@ exports.criarPaciente = async (req, res) => {
             documento,
             dataNascimento,
             sexo,
-            endereço,
+            endereco,
             email,
             contato,
             contatoEmergencia,

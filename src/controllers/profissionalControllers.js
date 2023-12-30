@@ -60,6 +60,86 @@ exports.obterProfissional = async (req, res) => {
         res.status(500).json({ Mensagem: 'Erro ao buscar Profissionais.' });
     }
 }
+
+exports.contarDocumentoProfissional = async (req, res) => {
+
+    try {
+        const contarDocumento = await Profissional.countDocuments();
+
+        res.status(200).json(contarDocumento);
+    } catch (error) {
+        res.status(404).json({ Mensagem: 'Não existem registros.' })
+    }
+}
+
+exports.obterProfissionalId = async (req, res) => {
+
+    try {
+        const profissionalId = req.params.profissionalId
+        const profissional = await Profissional.find({ _id: profissionalId });
+
+        //console.log(profissional)
+        // Organizar campos na ordem desejada (exemplo: _id, nomeCompleto, etc..)
+        const profissionaisFormatados = profissional.map(profissional => {
+            const { _id,
+                nomeCompleto,
+                documento,
+                registroProfissional,
+                acesso,
+                perfilAcessoId,
+                descricao,
+                Contato,
+                endereco,
+                especialidade,
+                experiencia,
+                formacao,
+                descricaoPessoal,
+                politicaRemarcacao,
+                horarioAtendimento,
+                valorConsulta,
+                tempoSessao,
+                redesSociais,
+                avaliacoes,
+                quantidadesAtendimentos
+            } = profissional._doc;
+            return {
+                _id,
+                nomeCompleto,
+                documento,
+                registroProfissional,
+                acesso,
+                perfilAcessoId,
+                descricao,
+                Contato,
+                endereco,
+                especialidade,
+                experiencia,
+                formacao,
+                descricaoPessoal,
+                politicaRemarcacao,
+                horarioAtendimento,
+                valorConsulta,
+                tempoSessao,
+                redesSociais,
+                avaliacoes,
+                quantidadesAtendimentos
+            };
+        });
+
+        // retorna os dados consultados no banco
+        res.status(200).json(profissionaisFormatados);
+
+    } catch (error) {
+
+        res.status(500).json({ Mensagem: 'Não foi possivel localizar um Profissional com esse ID.' });
+    }
+
+
+
+}
+
+
+
 // Cria um novo profissional
 exports.criarProfissional = async (req, res) => {
     const {

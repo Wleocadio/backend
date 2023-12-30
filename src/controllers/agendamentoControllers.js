@@ -27,12 +27,12 @@ exports.criarAgendamento = async (req, res) => {
         //console.log(verificaProfissional)
         try {
             const verificaPaciente = await Paciente.findById(pacienteId);
-           // console.log(verificaPaciente)
+            // console.log(verificaPaciente)
         } catch (error) {
-            return res.status(404).json({Mensagem: 'Paciente não encontrado!'})
+            return res.status(404).json({ Mensagem: 'Paciente não encontrado!' })
         }
     } catch (error) {
-        return res.status(404).json({Mensagem: 'Profissional não encontrado!'})
+        return res.status(404).json({ Mensagem: 'Profissional não encontrado!' })
     }
 
     try {
@@ -64,7 +64,7 @@ exports.obterAgendamento = async (req, res) => {
 
 exports.obterAgendamentoProfissional = async (req, res) => {
     try {
-        const agendamento = await Agendamento.find({profissionalId: req.params.profissionalId});
+        const agendamento = await Agendamento.find({ profissionalId: req.params.profissionalId });
 
         res.status(200).json(agendamento);
     } catch (error) {
@@ -74,7 +74,7 @@ exports.obterAgendamentoProfissional = async (req, res) => {
 
 exports.obterAgendamentoPaciente = async (req, res) => {
     try {
-        const agendamento = await Agendamento.find({pacienteId: req.params.pacienteId});
+        const agendamento = await Agendamento.find({ pacienteId: req.params.pacienteId });
 
         res.status(200).json(agendamento);
     } catch (error) {
@@ -82,12 +82,12 @@ exports.obterAgendamentoPaciente = async (req, res) => {
     }
 }
 
-exports.contarDocumentos = async (req, res) => {
+exports.contarDocumentoAgendamento = async (req, res) => {
     try {
         const agendamento = await Agendamento.countDocuments()
 
         res.status(200).json(agendamento);
     } catch (error) {
-        res.status(500).json({ Mensagem: 'Erro ao buscar adangamento' })
+        res.status(500).json({ Mensagem: 'Não existem registros.' })
     }
 }

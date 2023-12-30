@@ -8,7 +8,7 @@ exports.obterPaciente = async (req, res) => {
 
         // Organizar campos na ordem desejada (exemplo: _id, nomeCompleto, etc..)
         const pacientesFormatados = paciente.map(paciente => {
-            const { _id, 
+            const { _id,
                 nomeCompleto,
                 documento,
                 dataNascimento,
@@ -89,8 +89,21 @@ exports.obterPacientePorProfissional = async (req, res) => {
         // Retorna o que foi encontrado no banco
         res.status(200).json(pacientesFormatados);
     } catch (error) {
-        res.status(500).json({ Mensagem: 'Erro ao buscar Pacientes.' })
+        res.status(500).json({ Mensagem: 'Erro ao buscar Pacientes vinculado a um Profissional.' })
     }
+}
+
+//Contar quantos registro tem na collection Paciente
+
+exports.contarDocumentoPaciente = async (req, res) => {
+    try {
+        const contarDocumento = await Paciente.countDocuments();
+
+        res.status(200).json(contarDocumento);
+    } catch (error) {
+        res.status(404).json({ Mensagem: 'Não existem registros.' })
+    }
+
 }
 
 // Criar um novo paciente

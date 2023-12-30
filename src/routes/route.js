@@ -5,17 +5,20 @@ const pacienteController = require('../controllers/pacienteControllers')
 const agendamentoController = require('../controllers/agendamentoControllers')
 
 // Rota para busca de profissional
-router.get('/profissionais', profissionalController.obterProfissional);
+router.get('/profissional', profissionalController.obterProfissional);
+router.get('/profissional/:profissionalId', profissionalController.obterProfissionalId)
+router.get('/profissionalCount', profissionalController.contarDocumentoProfissional);
 
 //Rota para busca de paciente
 router.get('/pacientes', pacienteController.obterPaciente);
 router.get('/pacientes/:profissionalId', pacienteController.obterPacientePorProfissional);
+router.get('/pacientesCount', pacienteController.contarDocumentoPaciente)
 
 //Rota para busca de agendamento
 router.get('/agendamento', agendamentoController.obterAgendamento);
 router.get('/agendamentoProfissional/:profissionalId', agendamentoController.obterAgendamentoProfissional);
 router.get('/agendamentoPaciente/:pacienteId', agendamentoController.obterAgendamentoPaciente);
-router.get('/agendamento/count', agendamentoController.contarDocumentos);
+router.get('/agendamentoCount', agendamentoController.contarDocumentoAgendamento);
 
 
 //Rota para criar

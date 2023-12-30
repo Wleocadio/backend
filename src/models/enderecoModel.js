@@ -11,7 +11,4 @@ const enderecoSchema = new mongoose.Schema({
     estado: { type: String }
 })
 
-
-//const Endereco = mongoose.model('EnderecoSchema', enderecoSchema);
-
 module.exports = enderecoSchema;

@@ -11,8 +11,6 @@ const horarioAtendimento = new mongoose.Schema({
 })
 
 const perfilProfissional = new mongoose.Schema({
-    
-
 
 })
 

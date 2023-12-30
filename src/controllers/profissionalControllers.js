@@ -61,17 +61,8 @@ exports.obterProfissional = async (req, res) => {
     }
 }
 
-exports.contarDocumentoProfissional = async (req, res) => {
 
-    try {
-        const contarDocumento = await Profissional.countDocuments();
-
-        res.status(200).json(contarDocumento);
-    } catch (error) {
-        res.status(404).json({ Mensagem: 'Não existem registros.' })
-    }
-}
-
+// Busca pelo Id do profissional
 exports.obterProfissionalId = async (req, res) => {
 
     try {
@@ -138,6 +129,18 @@ exports.obterProfissionalId = async (req, res) => {
 
 }
 
+// Conta os registro da collection profissional
+exports.contarDocumentoProfissional = async (req, res) => {
+
+    try {
+        const contarDocumento = await Profissional.countDocuments();
+
+        res.status(200).json(contarDocumento);
+    } catch (error) {
+        res.status(404).json({ Mensagem: 'Não existem registros.' })
+    }
+}
+
 
 
 // Cria um novo profissional
@@ -164,8 +167,8 @@ exports.criarProfissional = async (req, res) => {
         quantidadesAtendimentos
     } = req.body;
 
-    //Validações
-    // Exemplo de validação: Verifica se o e-mail é um e-mail válido
+    // --- Validações ---
+    // Verifica se o e-mail é um e-mail válido
     if (Contato && Contato.email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(Contato.email)) {

@@ -3,8 +3,8 @@ const Agendamento = require('../models/agendamentoModel')
 const Profissional = require('../models/profissionalModel')
 const Paciente = require('../models/pacienteModel')
 
-//const Paciente = require('../models/pacienteModel')
 
+// Cria um novo agendamento
 exports.criarAgendamento = async (req, res) => {
     const {
         dataHora,
@@ -15,12 +15,13 @@ exports.criarAgendamento = async (req, res) => {
         Prescrições
     } = req.body;
 
-    // Validações
+    // --- Validações --
+    //Verifica se já existe essa data registrada no banco
     const verificaDataHora = await Agendamento.findOne({ dataHora })
-
     if (verificaDataHora) {
         return res.status(500).json({ Mensagem: 'Já existe agendamento nessa data.' })
     }
+
     // Verifica se o Profissional e o Paciente informados existem no banco de dados.
     try {
         const verificaProfissional = await Profissional.findById(profissionalId);
@@ -52,6 +53,8 @@ exports.criarAgendamento = async (req, res) => {
     }
 }
 
+
+// Busca todos os agendamentos cadstrados
 exports.obterAgendamento = async (req, res) => {
     try {
         const agendamento = await Agendamento.find();
@@ -62,6 +65,8 @@ exports.obterAgendamento = async (req, res) => {
     }
 }
 
+
+// Busca todos os agendamentos vinculado ao profissional pesquisado
 exports.obterAgendamentoProfissional = async (req, res) => {
     try {
         const agendamento = await Agendamento.find({ profissionalId: req.params.profissionalId });
@@ -72,6 +77,8 @@ exports.obterAgendamentoProfissional = async (req, res) => {
     }
 }
 
+
+// Busca todos os agendamentos vinculado ao paciente pesquisado
 exports.obterAgendamentoPaciente = async (req, res) => {
     try {
         const agendamento = await Agendamento.find({ pacienteId: req.params.pacienteId });
@@ -82,6 +89,8 @@ exports.obterAgendamentoPaciente = async (req, res) => {
     }
 }
 
+
+// Conta quantos registro tem na collection de agendamento
 exports.contarDocumentoAgendamento = async (req, res) => {
     try {
         const agendamento = await Agendamento.countDocuments()

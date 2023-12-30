@@ -93,8 +93,8 @@ exports.obterPacientePorProfissional = async (req, res) => {
     }
 }
 
-//Contar quantos registro tem na collection Paciente
 
+// Contar quantos registro tem na collection Paciente
 exports.contarDocumentoPaciente = async (req, res) => {
     try {
         const contarDocumento = await Paciente.countDocuments();
@@ -105,6 +105,7 @@ exports.contarDocumentoPaciente = async (req, res) => {
     }
 
 }
+
 
 // Criar um novo paciente
 exports.criarPaciente = async (req, res) => {
@@ -122,9 +123,9 @@ exports.criarPaciente = async (req, res) => {
         profissionalId
     } = req.body;
 
-    //Validações
+    // --- Validações ---
 
-
+    // Verifica se já existe paciente cadastrado com esse documento.
     const numeroDocumento = await Paciente.findOne({ 'documento.numeroDocumento': documento.numeroDocumento })
     if (numeroDocumento) {
         return res.status(400).json({ Mensagem: 'Documento já cadastrado.' })

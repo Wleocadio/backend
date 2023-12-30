@@ -10,6 +10,13 @@ const horarioAtendimento = new mongoose.Schema({
 
 })
 
+const perfilProfissional = new mongoose.Schema({
+    
+
+
+})
+
+
 const profissionalSchema = new mongoose.Schema({
     nomeCompleto: { type: String, required: true },
     documento: {
@@ -19,8 +26,8 @@ const profissionalSchema = new mongoose.Schema({
     registroProfissional: {
         tipo: { type: String, required: true },
         numeroRegistro: { type: String, required: true }
-
     },
+    
     acesso: acessoSchema,
     perfilAcessoId: { type: mongoose.Schema.Types.ObjectId, ref: 'PerfilAcesso' }, // Referência ao Perfil de acesso.
     descricao: {

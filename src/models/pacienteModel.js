@@ -12,10 +12,10 @@ const prontuarioPaciente = new mongoose.Schema({
 })
 
 const pacienteSchema = new mongoose.Schema({
-    nomeCompleto: { type: String, require: true },
+    nomeCompleto: { type: String, required: true },
     documento: {
         tipoDocumento: { type: String },
-        numeroDocumento: { type: String, require: true, unique: true },
+        numeroDocumento: { type: String, required: true, unique: true },
     },
     dataNascimento: { type: Date },
     sexo: { type: String },

@@ -53,6 +53,10 @@ exports.obterProntuario = async (req, res) => {
     try {
         const prontuario = await Prontuario.find();
 
+        // Verifica se o retorno do banco esta vazio.
+        if (prontuario == "") {
+            return res.status(404).json({Mensagem: 'Nenhum Prontuário encontrado.'})
+        }
         res.status(200).json(prontuario);
     } catch (error) {
         res.status(500).json({ Mensagem: 'Erro ao buscar prontuarios' })

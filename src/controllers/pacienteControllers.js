@@ -6,6 +6,11 @@ exports.obterPaciente = async (req, res) => {
     try {
         const paciente = await Paciente.find();
 
+      // Verifica se o retorno do banco esta vazio.
+        if (paciente == "") {
+            return res.status(404).json({Mensagem: 'Nenhum Paciente encontrado.'})
+        }
+
         // Organizar campos na ordem desejada (exemplo: _id, nomeCompleto, etc..)
         const pacientesFormatados = paciente.map(paciente => {
             const { _id,
@@ -48,6 +53,7 @@ exports.obterPacientePorProfissional = async (req, res) => {
     try {
         const paciente = await Paciente.find({ profissionalId: req.params.profissionalId });
 
+        // Verifica se o retorno do banco esta vazio.
         if (paciente == "") {
             return res.status(404).json({Mensagem: 'Não existe paciente vinculado a esse Profissional.'})
         }

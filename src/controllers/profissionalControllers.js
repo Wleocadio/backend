@@ -6,6 +6,10 @@ exports.obterProfissional = async (req, res) => {
     try {
         const profissionais = await Profissional.find();
 
+        // Verifica se o retorno do banco esta vazio.
+        if (profissionais == "") {
+            return res.status(404).json({Mensagem: 'Nenhum Profissional encontrado.'})
+        }
         // Organizar campos na ordem desejada (exemplo: _id, nomeCompleto, etc..)
         const profissionaisFormatados = profissionais.map(profissional => {
             const { _id,
@@ -135,6 +139,7 @@ exports.contarDocumentoProfissional = async (req, res) => {
     try {
         const contarDocumento = await Profissional.countDocuments()
 
+        // Verifica se o retorno do banco esta vazio.
         if (contarDocumento == "") {
             return res.status(404).json({Mensagem: 'Não existem registros.'})
         }

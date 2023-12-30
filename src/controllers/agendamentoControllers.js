@@ -61,7 +61,7 @@ exports.obterAgendamento = async (req, res) => {
 
         res.status(200).json(agendamento);
     } catch (error) {
-        res.status(500).json({ Mensagem: 'Erro ao buscar adangamento' })
+        res.status(500).json({ Mensagem: 'Erro ao buscar agendamentos' })
     }
 }
 
@@ -70,10 +70,12 @@ exports.obterAgendamento = async (req, res) => {
 exports.obterAgendamentoProfissional = async (req, res) => {
     try {
         const agendamento = await Agendamento.find({ profissionalId: req.params.profissionalId });
-
+        if (agendamento == "") {
+            return res.status(404).json({Mensagem: 'Não existe agendamento para esse Profissional.'})
+        }
         res.status(200).json(agendamento);
     } catch (error) {
-        res.status(500).json({ Mensagem: 'Erro ao buscar adangamento' })
+        res.status(500).json({ Mensagem: 'Erro ao buscar agendamento' })
     }
 }
 
@@ -82,10 +84,12 @@ exports.obterAgendamentoProfissional = async (req, res) => {
 exports.obterAgendamentoPaciente = async (req, res) => {
     try {
         const agendamento = await Agendamento.find({ pacienteId: req.params.pacienteId });
-
+        if (agendamento == "") {
+            return res.status(404).json({Mensagem: 'Não existe agendamento para esse Paciente.'})
+        }
         res.status(200).json(agendamento);
     } catch (error) {
-        res.status(500).json({ Mensagem: 'Erro ao buscar adangamento' })
+        res.status(500).json({ Mensagem: 'Erro ao buscar agendamento' })
     }
 }
 
@@ -93,10 +97,14 @@ exports.obterAgendamentoPaciente = async (req, res) => {
 // Conta quantos registro tem na collection de agendamento
 exports.contarDocumentoAgendamento = async (req, res) => {
     try {
-        const agendamento = await Agendamento.countDocuments()
+        const contarDocumento = await Agendamento.countDocuments()
 
-        res.status(200).json(agendamento);
+        if (contarDocumento == "") {
+            return res.status(404).json({Mensagem: 'Não existem registros.'})
+        }
+
+        res.status(200).json(contarDocumento);
     } catch (error) {
-        res.status(500).json({ Mensagem: 'Não existem registros.' })
+        res.status(500).json({ Mensagem: 'Ocorreu um erro ao contar os registros' })
     }
 }

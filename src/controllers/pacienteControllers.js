@@ -48,13 +48,14 @@ exports.obterPacientePorProfissional = async (req, res) => {
     try {
         const paciente = await Paciente.find({ profissionalId: req.params.profissionalId });
 
-        // VERIFICAR ERRO AO BUSCAR PACIENTE SEM VINCULO DE PROFISSIONAL
-        // IF NÃO ESTÁ FUNCIONANDO
+        if (paciente == "") {
+            return res.status(404).json({Mensagem: 'Não existe paciente vinculado a esse Profissional.'})
+        }
 
         // Valida se existe pacientes vinculados a esse profissional.
-        if (paciente.length === 0) {
-            return res.status(500).json({ Mensagem: 'Não existe paciente vinculado a esse Profissional.' })
-        }
+        //if (paciente.length === 0) {
+        //    return res.status(500).json({ Mensagem: 'Não existe paciente vinculado a esse Profissional.' })
+        //}
         // Organizar campos na ordem desejada (exemplo: _id, nomeCompleto, etc..)
         const pacientesFormatados = paciente.map(paciente => {
             const { _id,
@@ -97,11 +98,15 @@ exports.obterPacientePorProfissional = async (req, res) => {
 // Contar quantos registro tem na collection Paciente
 exports.contarDocumentoPaciente = async (req, res) => {
     try {
-        const contarDocumento = await Paciente.countDocuments();
+        const contarDocumento = await Paciente.countDocuments()
+
+        if (contarDocumento == "") {
+            return res.status(404).json({Mensagem: 'Não existem registros.'})
+        }
 
         res.status(200).json(contarDocumento);
     } catch (error) {
-        res.status(404).json({ Mensagem: 'Não existem registros.' })
+        res.status(500).json({ Mensagem: 'Ocorreu um erro ao contar os registros' })
     }
 
 }

@@ -133,11 +133,15 @@ exports.obterProfissionalId = async (req, res) => {
 exports.contarDocumentoProfissional = async (req, res) => {
 
     try {
-        const contarDocumento = await Profissional.countDocuments();
+        const contarDocumento = await Profissional.countDocuments()
+
+        if (contarDocumento == "") {
+            return res.status(404).json({Mensagem: 'Não existem registros.'})
+        }
 
         res.status(200).json(contarDocumento);
     } catch (error) {
-        res.status(404).json({ Mensagem: 'Não existem registros.' })
+        res.status(500).json({ Mensagem: 'Ocorreu um erro ao contar os registros' })
     }
 }
 

@@ -3,6 +3,7 @@ const router = express.Router();
 const profissionalController = require('../controllers/profissionalControllers')
 const pacienteController = require('../controllers/pacienteControllers')
 const agendamentoController = require('../controllers/agendamentoControllers')
+const prontuarioController = require('../controllers/prontuarioControllers')
 
 // Rota para busca de profissional
 router.get('/profissional', profissionalController.obterProfissional);
@@ -20,11 +21,18 @@ router.get('/agendamentoProfissional/:profissionalId', agendamentoController.obt
 router.get('/agendamentoPaciente/:pacienteId', agendamentoController.obterAgendamentoPaciente);
 router.get('/agendamentoCount', agendamentoController.contarDocumentoAgendamento);
 
+//Rota para busca de prontuario
+router.get('/prontuario', prontuarioController.obterProntuario);
+router.get('/prontuarioProfissional/:profissionalId', prontuarioController.obterProntuarioProfissional);
+router.get('/prontuarioPaciente/:pacienteId',prontuarioController.obterProntuarioPaciente);
+router.get('/prontuarioCount',prontuarioController.contarDocumentoProntuario);
 
 //Rota para criar
 router.post('/criarProfissional', profissionalController.criarProfissional);
 router.post('/criarPaciente', pacienteController.criarPaciente);
 router.post('/criarAgendamento',agendamentoController.criarAgendamento);
+router.post('/criarProntuario',prontuarioController.criarProntuario);
+
 //Rota para atualizar
 
 

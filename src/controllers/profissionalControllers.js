@@ -3,8 +3,7 @@ const validarCPF = require('../functions/validacaoCPF');
 const validarCNPJ = require('../functions/validacaoCNPj');
 
 
-const cpf = 'CPF';
-const cnpj = 'CNPJ';
+
 // Busca todos os profissionais cadastrados
 exports.obterProfissional = async (req, res) => {
     try {
@@ -12,7 +11,7 @@ exports.obterProfissional = async (req, res) => {
 
         // Verifica se o retorno do banco esta vazio.
         if (profissionais == "") {
-            return res.status(404).json({Mensagem: 'Nenhum Profissional encontrado.'})
+            return res.status(404).json({ Mensagem: 'Nenhum Profissional encontrado.' })
         }
         // Organizar campos na ordem desejada (exemplo: _id, nomeCompleto, etc..)
         const profissionaisFormatados = profissionais.map(profissional => {
@@ -145,7 +144,7 @@ exports.contarDocumentoProfissional = async (req, res) => {
 
         // Verifica se o retorno do banco esta vazio.
         if (contarDocumento == "") {
-            return res.status(404).json({Mensagem: 'Não existem registros.'})
+            return res.status(404).json({ Mensagem: 'Não existem registros.' })
         }
 
         res.status(200).json(contarDocumento);
@@ -198,25 +197,36 @@ exports.criarProfissional = async (req, res) => {
     const numeroDocumento = await Profissional.findOne({ 'documento.numeroDocumento': documento.numeroDocumento });
     if (numeroDocumento) {
         return res.status(404).json({ Mensagem: 'Documento já cadastrado' });
+
+
     }
 
     // Verifica o tipo de documento e se está no formato válido.
     if (documento.tipo !== 'CPF' && documento.tipo !== 'CNPJ') {
         console.log(documento.tipo)
         console.log(cpf, cnpj)
-        return res.status(404).json({ Mensagem: 'Tipo de documento inválido.'})
+        return res.status(404).json({ Mensagem: 'Tipo de documento inválido.' })
     }
-    if (documento.tipo == "CPF") {
-        if (!validarCPF(cpf)) {
-            return res.status(404).json({ Mensagem: 'CPF inválido.'})
-          
-    }}
 
-   // if (documento.tipo == "CNPJ") {
-   //     if (!validarCNPJ(cnpj)) {
-    //        return res.status(404).json({ Mensagem: 'CNPJ inválido.'})
-    //      } 
-    //}
+    // Se for documento do tipo CPF, ele faz uma válidação
+    if (documento.tipo == "CPF") {
+        const cpf = documento.numeroDocumento
+        console.log(cpf)
+        if (!validarCPF(cpf)) {
+            return res.status(404).json({ Mensagem: 'CPF inválido.' })
+
+        }
+    }
+
+    // Se for documento do tipo CNPJ, ele faz uma válidação
+    if (documento.tipo == "CNPJ") {
+        const cnpj = documento.numeroDocumento
+        console.log(cnpj)
+
+        if (!validarCNPJ(cnpj)) {
+            return res.status(404).json({ Mensagem: 'CNPJ inválido.' })
+        }
+    }
 
 
 
@@ -262,3 +272,4 @@ exports.criarProfissional = async (req, res) => {
         res.status(400).json({ Mensagem: 'Erro ao cadastrar Profissional' });
     }
 }
+

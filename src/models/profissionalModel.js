@@ -26,7 +26,7 @@ const profissionalSchema = new mongoose.Schema({
         numeroRegistro: { type: String, required: true }
     },
     
-    acesso: acessoSchema,
+    //acesso: acessoSchema,
     perfilAcessoId: { type: mongoose.Schema.Types.ObjectId, ref: 'PerfilAcesso' }, // Referência ao Perfil de acesso.
     descricao: {
         descricaoEspecialidade: { type: String },
@@ -46,7 +46,7 @@ const profissionalSchema = new mongoose.Schema({
     politicaRemarcacao: { type: String },
     horarioAtendimento: [horarioAtendimento],
     valorConsulta: { type: Number },
-    tempoSessão: { type: Number },
+    tempoSessao: { type: Number },
     redesSociais: [{
         tipoRedesSociais: { type: String },
         linkRedesSociais: { type: String }

@@ -1,8 +1,10 @@
 const Profissional = require('../models/profissionalModel');
-const validarCPF = require('../functions/validacaoCPF');
-const validarCNPJ = require('../functions/validacaoCNPj');
-
-
+//const validarCPF = require('../functions/validacaoCPF');
+//const validarCNPJ = require('../functions/validacaoCNPj');
+//const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+//const numeroRegex = /^\d+$/;
+const {validarDadosProfissional} = require('../functions/validarProfissional')
+const {validarDadosProfissionalAtualizacao} = require('../functions/atualizaProfissional')
 
 // Busca todos os profissionais cadastrados
 exports.obterProfissional = async (req, res) => {
@@ -67,7 +69,6 @@ exports.obterProfissional = async (req, res) => {
         res.status(500).json({ Mensagem: 'Erro ao buscar Profissionais.' });
     }
 }
-
 
 // Busca pelo Id do profissional
 exports.obterProfissionalId = async (req, res) => {
@@ -153,15 +154,13 @@ exports.contarDocumentoProfissional = async (req, res) => {
     }
 }
 
-
-
 // Cria um novo profissional
 exports.criarProfissional = async (req, res) => {
     const {
         nomeCompleto,
         documento,
         registroProfissional,
-        acesso,
+       // acesso,
         perfilAcessoId,
         descricao,
         Contato,
@@ -178,61 +177,12 @@ exports.criarProfissional = async (req, res) => {
         avaliacoes,
         quantidadesAtendimentos
     } = req.body;
-
-    // --- Validações ---
-    // Verifica se o e-mail é um e-mail válido
-    if (Contato && Contato.email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(Contato.email)) {
-            return res.status(404).json({ Mensagem: 'E-mail inválido' });
-        }
-    }
-    // Verifica se o e-mail já esta cadastrado
-    const emailExistente = await Profissional.findOne({ 'Contato.email': Contato.email });
-    if (emailExistente) {
-        return res.status(404).json({ Mensagem: 'E-mail já cadastrado.' });
-
-    }
-    // Verifica se o documento já esta cadastrado
-    const numeroDocumento = await Profissional.findOne({ 'documento.numeroDocumento': documento.numeroDocumento });
-    if (numeroDocumento) {
-        return res.status(404).json({ Mensagem: 'Documento já cadastrado' });
-
-
+//console.log(nomeCompleto)
+    const validacao = await validarDadosProfissional(Profissional, { Contato, documento, endereco, registroProfissional, valorConsulta, quantidadesAtendimentos, tempoSessao }, res);
+    if (validacao) {
+        return validacao; // Retorna a resposta da validação, se houver algum erro
     }
 
-    // Verifica o tipo de documento e se está no formato válido.
-    if (documento.tipo !== 'CPF' && documento.tipo !== 'CNPJ') {
-        console.log(documento.tipo)
-        console.log(cpf, cnpj)
-        return res.status(404).json({ Mensagem: 'Tipo de documento inválido.' })
-    }
-
-    // Se for documento do tipo CPF, ele faz uma válidação
-    if (documento.tipo == "CPF") {
-        const cpf = documento.numeroDocumento
-        console.log(cpf)
-        if (!validarCPF(cpf)) {
-            return res.status(404).json({ Mensagem: 'CPF inválido.' })
-
-        }
-    }
-
-    // Se for documento do tipo CNPJ, ele faz uma válidação
-    if (documento.tipo == "CNPJ") {
-        const cnpj = documento.numeroDocumento
-        console.log(cnpj)
-
-        if (!validarCNPJ(cnpj)) {
-            return res.status(404).json({ Mensagem: 'CNPJ inválido.' })
-        }
-    }
-
-
-
-
-
-    // código para receber os dados e salvar no banco
     try {
 
         const horariosDeAtendimento = horarioAtendimento.map(horario => ({
@@ -246,7 +196,7 @@ exports.criarProfissional = async (req, res) => {
             nomeCompleto,
             documento,
             registroProfissional,
-            acesso,
+            //acesso,
             perfilAcessoId,
             descricao,
             Contato,
@@ -273,3 +223,66 @@ exports.criarProfissional = async (req, res) => {
     }
 }
 
+// Atualizar Profissional
+exports.atualizarProfissional = async (req, res) => {
+    const profissionalId = req.params.profissionalId
+
+    
+
+        const profissional = await Profissional.findById(profissionalId);
+        if (!profissional) {
+            return res.status(404).json({ Mensagem: 'Profissional não encontrado' });
+        }
+        //console.log(profissional)
+        const {
+        nomeCompleto,
+        Contato,
+        registroProfissional,
+        descricao,
+        endereco,
+        especialidade,
+        experiencia,
+        formacao,
+        descricaoPessoal,
+        politicaRemarcacao,
+        horarioAtendimento,
+        valorConsulta,
+        tempoSessao,
+        redesSociais,
+    } = req.body;
+
+    const validacao = await validarDadosProfissionalAtualizacao(Profissional, {Contato, endereco, registroProfissional, valorConsulta, tempoSessao }, res);
+   
+    if (validacao) {
+        
+       return validacao; // Retorna a resposta da validação, se houver algum erro
+       
+    }
+
+        const horariosDeAtendimento = horarioAtendimento.map(horario => ({
+            data: horario.data,
+            horaInicio: horario.horaInicio,
+            horaFim: horario.horaFim,
+            status: horario.status,
+        }));
+
+        await Profissional.findByIdAndUpdate(profissionalId, {
+            nomeCompleto,
+            registroProfissional,
+            descricao,
+            endereco,
+            especialidade,
+            experiencia,
+            formacao,
+            descricaoPessoal,
+            politicaRemarcacao,
+            horarioAtendimento: horariosDeAtendimento,
+            valorConsulta,
+            tempoSessao,
+            redesSociais,
+        });
+
+        
+        res.status(201).json({Mensagem: 'Profissional atualizado com sucesso'});
+    
+}

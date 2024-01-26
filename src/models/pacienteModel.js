@@ -20,7 +20,7 @@ const pacienteSchema = new mongoose.Schema({
     dataNascimento: { type: Date },
     sexo: { type: String },
     endereco: enderecoSchema, // Schema de endereço
-    acesso: acessoSchema, //Schema de acesso
+    //acesso: acessoSchema, //Schema de acesso
     email: { type: String },
     contato: { type: Number },
     contatoEmergencia: { type: Number },

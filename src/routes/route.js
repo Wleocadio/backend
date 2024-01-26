@@ -4,11 +4,13 @@ const profissionalController = require('../controllers/profissionalControllers')
 const pacienteController = require('../controllers/pacienteControllers')
 const agendamentoController = require('../controllers/agendamentoControllers')
 const prontuarioController = require('../controllers/prontuarioControllers')
+const usuarioController = require('../controllers/usuarioController')
 
 // Rota para busca de profissional
 router.get('/profissional', profissionalController.obterProfissional);
 router.get('/profissional/:profissionalId', profissionalController.obterProfissionalId)
 router.get('/profissionalCount', profissionalController.contarDocumentoProfissional);
+
 
 //Rota para busca de paciente
 router.get('/pacientes', pacienteController.obterPaciente);
@@ -32,9 +34,10 @@ router.post('/criarProfissional', profissionalController.criarProfissional);
 router.post('/criarPaciente', pacienteController.criarPaciente);
 router.post('/criarAgendamento',agendamentoController.criarAgendamento);
 router.post('/criarProntuario',prontuarioController.criarProntuario);
-
+router.post('/registrar/:profissionalId', usuarioController.criarAcesso);
 //Rota para atualizar
-
+router.patch('/atualizarProfissional/:profissionalId', profissionalController.atualizarProfissional);
+router.patch('/atualizarAcesso/:profissionalId',usuarioController.atualizarAcesso);
 
 //Rota para excluir
 

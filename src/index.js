@@ -4,7 +4,7 @@ const PORT = process.env.PORT || 3000;
 const mongoose = require('mongoose');
 const MONGODB_URL = 'mongodb://localhost:27017/psiconsultas';
 const routes = require('./routes/route')
-
+require('dotenv').config();
 
 mongoose.connect(MONGODB_URL);
 

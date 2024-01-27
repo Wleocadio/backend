@@ -1,6 +1,8 @@
 const Acesso = require('../models/acessoModel');
 const Profissional = require('../models/profissionalModel');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 exports.criarAcesso = async (req, res) => {
     const profissionalId = req.params.profissionalId; // Referência ao Profissional.
@@ -88,6 +90,37 @@ exports.atualizarAcesso = async (req, res) => {
         });
 
         res.status(201).json({ Mensagem: 'Senha alterada com Sucesso.' });
+    } catch (err) {
+        res.status(500).json({ Mensagem: 'Erro ao processar a solicitação.' });
+    }
+
+}
+
+
+exports.login = async (req, res) => {
+    const { usuario, senha, } = req.body;
+
+    try {
+        const user = await Acesso.findOne({ usuario });
+
+        if (!user) {
+            return res.status(500).json({ Mensagem: 'Usuário não encontrado' })
+        }
+
+        const senhaHash = user.senha
+        const userId = user._id
+        const userProfissional = user.profissionalId
+        const userusuario = user.usuario
+        const isMatch = await bcrypt.compare(senha, senhaHash);
+        console.log(isMatch)
+        console.log(senhaHash)
+        if (!isMatch) {
+            return res.status(400).json({ Mensagem: "Senha Atual Incorreta." });
+        }
+
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '12h' })
+        console.log(token)
+        res.status(201).json({ Mensagem: 'Login efetuado com Sucesso.', userId, userProfissional, userusuario, token });
     } catch (err) {
         res.status(500).json({ Mensagem: 'Erro ao processar a solicitação.' });
     }

@@ -1,0 +1,945 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Projeto PSI",
+      "version": "1.0.0",
+      "description": "Documentação das APIs"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000"
+      }
+    ],
+    "paths": {
+        "/registrar/{profissionalId}": {
+            "post": {
+              "tags": ["Login"],
+              "summary": "Registra um novo usuário",
+              "parameters": [
+                {
+                  "name": "usuarioId",
+                  "in": "path",
+                  "required": true,
+                  "description": "Identificador único do usuário a ser registrado",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "usuario": {
+                          "type": "string"
+                        },
+                        "senha": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["usuario", "senha"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Usuário registrado com sucesso"
+                },
+                "400": {
+                  "description": "Dados inválidos fornecidos"
+                },
+                "409": {
+                  "description": "Usuário já existe"
+                }
+              }
+            }
+          },
+          "/atualizarAcesso/{profissionalId}": {
+            "patch": {
+              "tags": ["Login"],
+              "summary": "Atualiza as credenciais de acesso de um usuário",
+              "parameters": [
+                {
+                  "name": "profissionalId",
+                  "in": "path",
+                  "required": true,
+                  "description": "Identificador único do usuário cujas credenciais de acesso serão atualizadas",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "usuario": {
+                          "type": "string"
+                        },
+                        "senhaAtual": {
+                          "type": "string"
+                        },
+                        "novaSenha": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["usuario", "senhaAtual", "novaSenha"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Credenciais de acesso atualizadas com sucesso"
+                },
+                "400": {
+                  "description": "Dados inválidos fornecidos"
+                },
+                "404": {
+                  "description": "Usuário não encontrado"
+                }
+              }
+            }
+          },
+          "/auth/login": {
+            "post": {
+              "tags": ["Login"],
+              "summary": "Realiza o login de um usuário",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "usuario": {
+                          "type": "string"
+                        },
+                        "senha": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["usuario", "senha"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Login realizado com sucesso",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "token": {
+                            "type": "string",
+                            "description": "Token de acesso gerado após o login"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "401": {
+                  "description": "Credenciais inválidas"
+                },
+                "400": {
+                  "description": "Dados inválidos fornecidos"
+                }
+              }
+            }
+          },
+      "/criarProfissional": {
+        "post": {
+            "tags": ["Profissional"],
+          "summary": "Cria um novo profissional",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Profissional"
+                },
+                "examples": {
+                  "exemploProfissional": {
+                    "summary": "Exemplo de novo profissional",
+                    "value": {
+                        
+                            "nomeCompleto": "{{NomeCompleto}}",
+                            "documento": {
+                                "tipo": "CNPJ",
+                                "numeroDocumento": "{{Cnpj}}"
+                            },
+                            "registroProfissional": {
+                                "tipo": "CRP",
+                                "numeroRegistro": 12345
+                            },
+                            "perfilAcessoId":"658b32462a1d3bbe40e9e952",
+                            "descricao": {
+                                "descricaoEspecialidade": "Especialidade do Profissional",
+                                "descricaoAtendimento": "Descrição do Atendimento",
+                                "descricaoPerfil": "Descrição do Perfil"
+                            },
+                            "Contato": {
+                                "telefone": 11980808080,
+                                "whatsApp": 987654321,
+                                "email": "{{Mail}}"
+                            },
+                            "endereco": {
+                                "cep": "{{ZipCode}}",
+                                "rua": "{{Street}}",
+                                "numeroResidencia": "{{Number}}",
+                                "complemento": "---",
+                                "bairro": "{{District}}",
+                                "cidade": "{{City}}",
+                                "estado": "{{State}}"
+                            },
+                            "especialidade": ["Cardiologia", "Neurologia"],
+                            "experiencia": "Experiência do Profissional",
+                            "formacao": ["Graduação em Medicina", "Residência em Cardiologia"],
+                            "descricaoPessoal": "Descrição Pessoal do Profissional",
+                            "politicaRemarcacao": "Política de remarcação",
+                            "horarioAtendimento": [
+                                {"data": "23/12/2023", "horaInicio": "09:00", "horaFim": "18:00", "status": "Disponivel"},
+                                {"data": "23/12/2023", "horaInicio": "10:00", "horaFim": "19:00", "status": "Indisponivel"}
+                            ],
+                            "valorConsulta": 150,
+                            "tempoSessao": 60,
+                            "redesSociais": [
+                                {"tipoRedesSociais": "Facebook", "linkRedesSociais": "https://www.facebook.com/profissional"},
+                                {"tipoRedesSociais": "Instagram", "linkRedesSociais": "https://www.instagram.com/profissional"}
+                            ],
+                            "avaliacoes": ["Excelente", "Bom"],
+                            "quantidadesAtendimentos": 100
+                        
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Profissional criado com sucesso"
+            }
+          
+          }
+        }
+      },
+      "/atualizarProfissional/{profissionalId}": {
+        "patch": {
+          "tags": ["Profissional"],
+          "summary": "Atualiza informações de um profissional",
+          "parameters": [
+            {
+              "name": "profissionalId",
+              "in": "path",
+              "required": true,
+              "description": "Identificador único do profissional a ser atualizado",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "nomeCompleto": {
+                      "type": "string"
+                    },
+                    "registroProfissional": {
+                      "type": "object",
+                      "properties": {
+                        "tipo": {"type": "string"},
+                        "numeroRegistro": {"type": "integer"}
+                      },
+                      "required": ["tipo", "numeroRegistro"]
+                    },
+                    "descricao": {
+                      "type": "object",
+                      "properties": {
+                        "descricaoEspecialidade": {"type": "string"},
+                        "descricaoAtendimento": {"type": "string"},
+                        "descricaoPerfil": {"type": "string"}
+                      }
+                    },
+                    "endereco": {
+                      "type": "object",
+                      "properties": {
+                        "cep": {"type": "string"},
+                        "rua": {"type": "string"},
+                        "numeroResidencia": {"type": "string"},
+                        "complemento": {"type": "string"},
+                        "bairro": {"type": "string"},
+                        "cidade": {"type": "string"},
+                        "estado": {"type": "string"}
+                      },
+                      "required": ["cep", "rua", "numeroResidencia", "bairro", "cidade", "estado"]
+                    },
+                    "especialidade": {
+                      "type": "array",
+                      "items": {"type": "string"}
+                    },
+                    "experiencia": {
+                      "type": "string"
+                    },
+                    "formacao": {
+                      "type": "array",
+                      "items": {"type": "string"}
+                    },
+                    "descricaoPessoal": {
+                      "type": "string"
+                    },
+                    "politicaRemarcacao": {
+                      "type": "string"
+                    },
+                    "horarioAtendimento": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "data": {"type": "string"},
+                          "horaInicio": {"type": "string"},
+                          "horaFim": {"type": "string"},
+                          "status": {"type": "string"}
+                        },
+                        "required": ["data", "horaInicio", "horaFim", "status"]
+                      }
+                    },
+                    "valorConsulta": {
+                      "type": "string"
+                    },
+                    "tempoSessao": {
+                      "type": "integer"
+                    },
+                    "redesSociais": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "tipoRedesSociais": {"type": "string"},
+                          "linkRedesSociais": {"type": "string"}
+                        },
+                        "required": ["tipoRedesSociais", "linkRedesSociais"]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Informações do profissional atualizadas com sucesso"
+            },
+            "400": {
+              "description": "Dados inválidos fornecidos"
+            },
+            "404": {
+              "description": "Profissional não encontrado"
+            }
+          }
+        }
+      },"/profissional": {
+        "get": {
+          "tags": ["Profissional"],
+          "summary": "Recupera informações de todos os profissionais",
+          "responses": {
+            "200": {
+              "description": "Lista de profissionais",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Profissional"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/profissional/{profissionalId}": {
+        "get": {
+          "tags": ["Profissional"],
+          "summary": "Recupera informações de um profissional específico",
+          "parameters": [
+            {
+              "name": "profissionalId",
+              "in": "path",
+              "required": true,
+              "description": "Identificador único do profissional",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Informações do profissional",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Profissional"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Profissional não encontrado"
+            }
+          }
+        }
+      },
+      "/fotoPerfil/{fotoId}": {
+        "post": {
+          "tags": ["FotoPerfil"],
+          "summary": "Recupera a foto de perfil de um profissional ou paciente",
+          "parameters": [
+            {
+              "name": "fotoId",
+              "in": "path",
+              "required": true,
+              "description": "Identificador único da foto de perfil",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Foto de perfil",
+              "content": {
+                "image/jpeg": {}
+              }
+            },
+            "404": {
+              "description": "Foto de perfil não encontrada"
+            }
+          }
+        }
+      },
+      "/fotoPerfil/{Id}": {
+        "get": {
+          "tags": ["FotoPerfil"],
+          "summary": "Recupera a foto de perfil de um profissional ou paciente",
+          "parameters": [
+            {
+              "name": "fotoId",
+              "in": "path",
+              "required": true,
+              "description": "Identificador único da foto de perfil",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Foto de perfil",
+              "content": {
+                "image/jpeg": {}
+              }
+            },
+            "404": {
+              "description": "Foto de perfil não encontrada"
+            }
+          }
+        }
+      },
+      "/atualizarFotoPerfil/{fotoId}": {
+        "patch": {
+          "tags": ["FotoPerfil"],
+          "summary": "Atualiza a foto de perfil",
+          "parameters": [
+            {
+              "name": "fotoId",
+              "in": "path",
+              "required": true,
+              "description": "Identificador único da foto de perfil a ser atualizada",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "foto": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  },
+                  "required": ["foto"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Foto de perfil atualizada com sucesso"
+            },
+            "400": {
+              "description": "Dados inválidos fornecidos"
+            },
+            "404": {
+              "description": "Foto de perfil não encontrada"
+            }
+          }
+        }
+      },
+      "/agendarAgendamento": {
+        "post": {
+          "tags": ["Consulta"],
+          "summary": "Agenda uma nova consulta",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Consulta"
+                },
+                "examples": {
+                  "exemploConsulta": {
+                    "summary": "Exemplo de agendamento de consulta",
+                    "value": {
+                      "dataHora": "2023-01-01T14:14:41",
+                      "profissionalId": "65905cd96286030dc429ce3a",
+                      "pacienteId": "65889065571be064da85e9db",
+                      "statusConsulta": "Agendado",
+                      "Observações": "",
+                      "Prescrições": ""
+                    }
+                  }
+                }
+              }
+            }            
+          },
+          "responses": {
+            "200": {
+              "description": "Consulta agendada com sucesso"
+            }
+          }
+        }
+      },
+      "/atualizarAgendamento": {
+        "patch": {
+          "tags": ["Consulta"],
+          "summary": "Atualiza um agendamento de consulta existente",
+          "parameters": [
+            {
+              "name": "consultaId",
+              "in": "path",
+              "required": true,
+              "description": "Identificador único da consulta a ser atualizada",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "dataHora": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "pacienteId": {
+                      "type": "string"
+                    },
+                    "statusConsulta": {
+                      "type": "string",
+                      "enum": ["Agendado", "Confirmado", "Cancelado", "Livre"]
+                    },
+                    "Observações": {
+                      "type": "string"
+                    },
+                    "Prescrições": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "exemploAtualizacao": {
+                    "summary": "Exemplo de atualização de agendamento",
+                    "value": {
+                      "dataHora": "2023-11-11T15:11:12",
+                      "pacienteId": "65889065571be064da85e9db",
+                      "statusConsulta": "Livre",
+                      "Observações": "",
+                      "Prescrições": ""
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Agendamento atualizado com sucesso"
+            },
+            "400": {
+              "description": "Dados inválidos fornecidos"
+            },
+            "404": {
+              "description": "Consulta não encontrada"
+            }
+          }
+        }
+      },
+      "/agendamento": {
+        "get": {
+          "tags": ["Consulta"],
+          "summary": "Recupera todos os agendamentos",
+          "responses": {
+            "200": {
+              "description": "Lista de todos os agendamentos",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Consulta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/agendamentoProfissional/{profissionalId}": {
+        "get": {
+          "tags": ["Consulta"],
+          "summary": "Recupera os agendamentos de um profissional específico",
+          "parameters": [
+            {
+              "name": "profissionalId",
+              "in": "path",
+              "required": true,
+              "description": "Identificador único do profissional"        
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Lista de agendamentos do profissional",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Consulta"
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Profissional não encontrado"
+            }
+          }
+        }
+      },      
+      "/criarPaciente": {
+        "post": {
+          "tags": ["Paciente"],
+          "summary": "Cria um novo cadastro de paciente",
+          "requestBody": {
+            "required": true,
+            "content": {
+                "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/Paciente"
+                    },
+                "examples": {
+                  "exemploPaciente": {
+                    "summary": "Exemplo de cadastro de paciente",
+                    "value": {
+                      "nomeCompleto": "{{NomeCompleto}}",
+                      "documento": {
+                        "tipoDocumento": "CPF",
+                        "numeroDocumento": "{{CPF}}"
+                      },
+                      "dataNascimento": "1990-01-01",
+                      "sexo": "Masculino",
+                      "endereco": {
+                        "cep": "{{ZipCode}}",
+                        "rua": "{{Street}}",
+                        "numeroResidencia": "{{Number}}",
+                        "complemento": "---",
+                        "bairro": "{{District}}",
+                        "cidade": "{{City}}",
+                        "estado": "{{State}}"
+                      },
+                      "acesso": {
+                        "usuario": "{{LoginUser}}",
+                        "senha": "teste123",
+                        "bloqueio": false,
+                        "plano": "Mensal"
+                      },
+                      "email": "{{Mail}}",
+                      "contato": "123456789",
+                      "contatoEmergencia": "987654321",
+                      "prontuario": [
+                        {
+                          "avaliacaoDemanda": "Avaliação da demanda do paciente",
+                          "progresso": "Registro do progresso do trabalho",
+                          "encaminhamento": "Registro de Encaminhamento ou Encerramento",
+                          "informacoesGeral": "Informações gerais sobre o paciente",
+                          "status": "Alta"
+                        }
+                      ],
+                      "profissionalId": "65889065571be064da85e9db"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Cadastro de paciente realizado com sucesso"
+            },
+            "400": {
+              "description": "Dados inválidos fornecidos"
+            }
+          }
+        }
+      },
+      "/pacientes": {
+        "get": {
+          "tags": ["Paciente"],
+          "summary": "Recupera informações de todos os pacientes",
+          "responses": {
+            "200": {
+              "description": "Lista de pacientes",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Paciente"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/pacientes/{pacienteId}": {
+        "get": {
+          "tags": ["Paciente"],
+          "summary": "Recupera informações de um paciente específico",
+          "parameters": [
+            {
+              "name": "pacienteId",
+              "in": "path",
+              "required": true,
+              "description": "Identificador único do paciente",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Informações do paciente",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Paciente"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Paciente não encontrado"
+            }
+          }
+        }
+      },
+      "/criarProntuario": {
+        "post": {
+          "tags": ["Prontuario"],
+          "summary": "Cria um novo prontuário para um paciente",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "profissionalId": {
+                      "type": "string"
+                    },
+                    "pacienteId": {
+                      "type": "string"
+                    },
+                    "avaliacaoDemanda": {
+                      "type": "string"
+                    },
+                    "planoTrabalho": {
+                      "type": "string"
+                    },
+                    "evolucao": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "registro": {"type": "string"},
+                          "dataConsulta": {"type": "string", "format": "date-time"}
+                        },
+                        "required": ["registro", "dataConsulta"]
+                      }
+                    },
+                    "encaminhamentoEncerramento": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["profissionalId", "pacienteId", "avaliacaoDemanda", "planoTrabalho", "evolucao", "encaminhamentoEncerramento"]
+                },
+                "examples": {
+                  "exemploProntuario": {
+                    "summary": "Exemplo de criação de prontuário",
+                    "value": {
+                      "profissionalId":"65907afb27dc326550f4fffe" ,
+                      "pacienteId": "65907b0027dc326550f50007", 
+                      "avaliacaoDemanda": "Paciente com problema MENTAL",
+                      "planoTrabalho": "Terapia dos esquemas",
+                      "evolucao": [
+                        {"registro": "Primeira consulta, paciente é doido","dataConsulta": "2023-01-01T14:13:41"},
+                        {"registro": "Na segunda consulta, paciente não é tão doido assim","dataConsulta": "2023-08-01T14:13:41"}
+                      ],
+                      "encaminhamentoEncerramento": "encerramento só em 2050"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Prontuário criado com sucesso"
+            },
+            "400": {
+              "description": "Dados inválidos fornecidos"
+            }
+          }
+        }
+      },
+      "/prontuario": {
+        "get": {
+          "tags": ["Prontuario"],
+          "summary": "Recupera todos os prontuários",
+          "responses": {
+            "200": {
+              "description": "Lista de prontuários",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Prontuario"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/prontuarioProfissional/{profissionalId}": {
+        "get": {
+          "tags": ["Prontuario"],
+          "summary": "Recupera prontuários associados a um profissional específico",
+          "parameters": [
+            {
+              "name": "profissionalId",
+              "in": "path",
+              "required": true,
+              "description": "Identificador único do profissional",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Prontuários associados ao profissional",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Prontuario"
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Profissional não encontrado"
+            }
+          }
+        }
+      },
+      "/prontuarioPaciente/{pacienteId}": {
+        "get": {
+          "tags": ["Prontuario"],
+          "summary": "Recupera prontuários de um paciente específico",
+          "parameters": [
+            {
+              "name": "pacienteId",
+              "in": "path",
+              "required": true,
+              "description": "Identificador único do paciente",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Prontuários do paciente",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Prontuario"
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Paciente não encontrado"
+            }
+          }
+        }
+      }
+    }
+  }

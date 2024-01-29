@@ -71,7 +71,7 @@ exports.obterAgendamentoProfissional = async (req, res) => {
     try {
         const agendamento = await Agendamento.find({ profissionalId: req.params.profissionalId });
         if (agendamento == "") {
-            return res.status(404).json({Mensagem: 'Não existe agendamento para esse Profissional.'})
+            return res.status(404).json({ Mensagem: 'Não existe agendamento para esse Profissional.' })
         }
         res.status(200).json(agendamento);
     } catch (error) {
@@ -85,7 +85,7 @@ exports.obterAgendamentoPaciente = async (req, res) => {
     try {
         const agendamento = await Agendamento.find({ pacienteId: req.params.pacienteId });
         if (agendamento == "") {
-            return res.status(404).json({Mensagem: 'Não existe agendamento para esse Paciente.'})
+            return res.status(404).json({ Mensagem: 'Não existe agendamento para esse Paciente.' })
         }
         res.status(200).json(agendamento);
     } catch (error) {
@@ -100,11 +100,50 @@ exports.contarDocumentoAgendamento = async (req, res) => {
         const contarDocumento = await Agendamento.countDocuments()
 
         if (contarDocumento == "") {
-            return res.status(404).json({Mensagem: 'Não existem registros.'})
+            return res.status(404).json({ Mensagem: 'Não existem registros.' })
         }
 
         res.status(200).json(contarDocumento);
     } catch (error) {
         res.status(500).json({ Mensagem: 'Ocorreu um erro ao contar os registros' })
     }
+}
+
+
+exports.atualizarAgendamento = async (req, res) => {
+    const agendamentoId = req.params.agendamentoId
+    try {
+       // console.log(agendamentoId)
+        const agendamento = await Agendamento.findById(agendamentoId);
+    if (agendamento == "") {
+        return res.status(404).json({ Mensagem: 'Não existe agendamento.' })
+    }
+    const {
+        dataHora,
+        // profissionalId, // Referência ao Profissional.,
+        pacienteId, // Referência ao Profissional.
+        statusConsulta,
+        Observações,
+        Prescrições
+    } = req.body;
+
+    const verificaDataHora = await Agendamento.findOne({ dataHora })
+    if (verificaDataHora) {
+        return res.status(500).json({ Mensagem: 'Já existe agendamento nessa data.' })
+    }
+
+    await Agendamento.findByIdAndUpdate(agendamentoId, {
+        dataHora,
+        pacienteId, // Referência ao Profissional.
+        statusConsulta,
+        Observações,
+        Prescrições
+    })
+    return res.status(200).json({ Mensagem: 'Agendamento atualizado com sucesso' })
+    } catch (error) {
+        return res.status(500).json({Mensagem: 'Erro ao atualizar agendamento.'})
+    }
+    
+
+
 }

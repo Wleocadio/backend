@@ -227,8 +227,6 @@ exports.criarProfissional = async (req, res) => {
 exports.atualizarProfissional = async (req, res) => {
     const profissionalId = req.params.profissionalId
 
-    
-
         const profissional = await Profissional.findById(profissionalId);
         if (!profissional) {
             return res.status(404).json({ Mensagem: 'Profissional não encontrado' });

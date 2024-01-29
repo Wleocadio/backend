@@ -112,14 +112,15 @@ exports.login = async (req, res) => {
         const userProfissional = user.profissionalId
         const userusuario = user.usuario
         const isMatch = await bcrypt.compare(senha, senhaHash);
-        console.log(isMatch)
-        console.log(senhaHash)
+        //console.log(isMatch)
+        //console.log(senhaHash)
         if (!isMatch) {
             return res.status(400).json({ Mensagem: "Senha Atual Incorreta." });
         }
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '12h' })
-        console.log(token)
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '3h' })
+
+       // console.log(token)
         res.status(201).json({ Mensagem: 'Login efetuado com Sucesso.', userId, userProfissional, userusuario, token });
     } catch (err) {
         res.status(500).json({ Mensagem: 'Erro ao processar a solicitação.' });

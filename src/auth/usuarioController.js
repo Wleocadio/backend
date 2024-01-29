@@ -107,21 +107,38 @@ exports.login = async (req, res) => {
             return res.status(500).json({ Mensagem: 'Usuário não encontrado' })
         }
 
+        if (user.bloqueio) {
+            return res.status(401).json({ Mensagem: 'Conta bloqueada devido a tentativas de login malsucedidas.' });
+        }
+
         const senhaHash = user.senha
         const userId = user._id
         const userProfissional = user.profissionalId
-        const userusuario = user.usuario
+        const userUsuario = user.usuario
         const isMatch = await bcrypt.compare(senha, senhaHash);
         //console.log(isMatch)
         //console.log(senhaHash)
         if (!isMatch) {
-            return res.status(400).json({ Mensagem: "Senha Atual Incorreta." });
+            user.tentativas += 1;
+
+            if (user.tentativas >= 3) {
+                user.bloqueio = true;
+                await user.save();
+                return res.status(401).json({ Mensagem: 'Conta bloqueada devido a tentativas de login malsucedidas.' });
+            }
+
+            await user.save();
+            return res.status(400).json({ Mensagem: "Senha Atual Incorreta. Tentativas restantes: " + (3 - user.tentativas) });
         }
+
+        // Reset tentativas de login após login bem-sucedido
+        user.tentativas = 0;
+        await user.save();
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '3h' })
 
        // console.log(token)
-        res.status(201).json({ Mensagem: 'Login efetuado com Sucesso.', userId, userProfissional, userusuario, token });
+        res.status(201).json({ Mensagem: 'Login efetuado com Sucesso.', userId, userProfissional, userUsuario, token });
     } catch (err) {
         res.status(500).json({ Mensagem: 'Erro ao processar a solicitação.' });
     }

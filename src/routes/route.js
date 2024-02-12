@@ -7,6 +7,8 @@ const prontuarioController = require('../controllers/prontuarioControllers')
 const usuarioController = require('../auth/usuarioController')
 const verificaToken = require('../middleware/validaToken')
 const fotoPerfilController = require('../controllers/fotoPerfilController')
+const esquecisenhaController = require('../controllers/envioControllers')
+
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -85,6 +87,7 @@ router.get('/prontuarioCount', verificaToken, (req, res) => {
 router.get('/fotoPerfil/:profissionalId', verificaToken,
     fotoPerfilController.obterFotoPerfil)
 
+
 //Rota para criar
 router.post('/criarProfissional', profissionalController.criarProfissional);
 
@@ -108,6 +111,7 @@ router.post('/fotoPerfil/:profissionalId', verificaToken, upload.single('foto'),
 
 
 
+
 //Rota para atualizar
 router.patch('/atualizarProfissional/:profissionalId', verificaToken, (req, res) => {
     profissionalController.atualizarProfissional(req, res)
@@ -122,9 +126,11 @@ router.patch('/atualizarAgendamento/:agendamentoId', verificaToken, (req, res) =
     agendamentoController.atualizarAgendamento(req, res)
 
 })
+router.patch('/recuperarSenha', usuarioController.recuperarSenha)// adicionar no swagger
 
 //Rota Login
 router.post('/auth/login', usuarioController.login)
+router.post('/esqueciSenha', esquecisenhaController.solicitarSenha)// adicionar no swagger
 
 //Rota para excluir
 

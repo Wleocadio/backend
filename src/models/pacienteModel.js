@@ -23,6 +23,7 @@ const pacienteSchema = new mongoose.Schema({
     //acesso: acessoSchema, //Schema de acesso
     email: { type: String },
     contato: { type: Number },
+    whatsApp: { type: Number },
     contatoEmergencia: { type: Number },
     prontuario: [prontuarioPaciente],
     profissionalId:{type: mongoose.Schema.Types.ObjectId, ref: 'Profissional'}, // Referência ao Profissional.

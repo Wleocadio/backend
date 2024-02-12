@@ -22,6 +22,7 @@ exports.obterPaciente = async (req, res) => {
                 acesso,
                 email,
                 contato,
+                whatsApp,
                 contatoEmergencia,
                 prontuario,
                 profissionalId
@@ -36,6 +37,7 @@ exports.obterPaciente = async (req, res) => {
                 acesso,
                 email,
                 contato,
+                whatsApp,
                 contatoEmergencia,
                 prontuario,
                 profissionalId
@@ -73,6 +75,7 @@ exports.obterPacientePorProfissional = async (req, res) => {
                 acesso,
                 email,
                 contato,
+                whatsApp,
                 contatoEmergencia,
                 prontuario,
                 profissionalId
@@ -87,6 +90,7 @@ exports.obterPacientePorProfissional = async (req, res) => {
                 acesso,
                 email,
                 contato,
+                whatsApp,
                 contatoEmergencia,
                 prontuario,
                 profissionalId
@@ -129,6 +133,7 @@ exports.criarPaciente = async (req, res) => {
         acesso,
         email,
         contato,
+        whatsApp,
         contatoEmergencia,
         prontuario,
         profissionalId
@@ -162,6 +167,7 @@ exports.criarPaciente = async (req, res) => {
             acesso,
             email,
             contato,
+            whatsApp,
             contatoEmergencia,
             prontuario: prontuarios,
             profissionalId,

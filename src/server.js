@@ -7,9 +7,10 @@ const routes = require('./routes/route')
 require('dotenv').config();
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument  = require('../swagger.json');
-
-
+const cron = require('node-cron');
+const verificarAgendamentosESendAlerts = require('./functions/verificaAgendamento')
 mongoose.connect(MONGODB_URL);
+
 
 
 const db = mongoose.connection;
@@ -21,6 +22,12 @@ db.once('open', () =>{
 
 app.use(express.json());
 
+// Agendar tarefa para executar diariamente em um horário específico (por exemplo, à meia-noite)
+const sessionId = "apiwhatsapp";
+cron.schedule('0 9 * * *', () => {
+    console.log('Verificando agendamentos para hoje...');
+    //verificarAgendamentosESendAlerts(sessionId); - desabilitado a verificação da agenda
+});
 //Rotas
 
 app.use('/api', routes);

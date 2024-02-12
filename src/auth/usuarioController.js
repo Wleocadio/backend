@@ -2,6 +2,7 @@ const Acesso = require('../models/acessoModel');
 const Profissional = require('../models/profissionalModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+
 require('dotenv').config();
 
 exports.criarAcesso = async (req, res) => {
@@ -89,13 +90,54 @@ exports.atualizarAcesso = async (req, res) => {
             senha: senhaCriptografada,
         });
 
-        res.status(201).json({ Mensagem: 'Senha alterada com Sucesso.' });
+        res.status(200).json({ Mensagem: 'Senha alterada com Sucesso.' });
     } catch (err) {
         res.status(500).json({ Mensagem: 'Erro ao processar a solicitação.' });
     }
 
 }
 
+exports.recuperarSenha = async (req, res) => {
+    let idUsuario
+    const { novaSenha, novaSenhaRepitir, token } = req.body;
+    
+    //console.log(token)
+    try {
+    const decoded = jwt.verify(token, process.env.TokenEmail);
+    idUsuario = decoded._id;
+
+    } catch (error) {
+        return res.status(500).json({Mensagem: 'Token inválido'})
+    }
+    
+    //console.log(idUsuario)
+
+
+    const verificaCadastro = await Acesso.findOne({ profissionalId: idUsuario });
+    if (!verificaCadastro) {
+        return res.status(500).json({ Mensagem: 'Cadastro não encontrado.' });
+    }
+    
+    const idAcesso = verificaCadastro._id;
+
+
+    if (novaSenha != novaSenhaRepitir || novaSenhaRepitir != novaSenha) {
+        return res.status(500).json({ Mensagem: 'As senhas são diferentes.' });
+    }
+
+  
+    try {     
+        const senhaCriptografada = await bcrypt.hash(novaSenha, 10);
+        await Acesso.findByIdAndUpdate(idAcesso, {
+            senha: senhaCriptografada,
+        });
+
+        res.status(200).json({ Mensagem: 'Senha alterada com Sucesso.' });
+    } catch (err) {
+        res.status(500).json({ Mensagem: 'Erro ao processar a solicitação.' });
+    }
+
+}
 
 exports.login = async (req, res) => {
     const { usuario, senha, } = req.body;
@@ -137,8 +179,8 @@ exports.login = async (req, res) => {
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '3h' })
 
-       // console.log(token)
-        res.status(201).json({ Mensagem: 'Login efetuado com Sucesso.', userId, userProfissional, userUsuario, token });
+        // console.log(token)
+        res.status(200).json({ Mensagem: 'Login efetuado com Sucesso.', userId, userProfissional, userUsuario, token });
     } catch (err) {
         res.status(500).json({ Mensagem: 'Erro ao processar a solicitação.' });
     }

@@ -2,6 +2,7 @@ const Agendamento = require('../models/agendamentoModel'); // Modelo Mongoose pa
 const Profissional = require('../models/profissionalModel')
 const Paciente = require('../models/pacienteModel')
 const enviarAlertasAgendamento = require('./enviaAlertaAgendamento')
+const salvarNotificacao = require('./salvarNotificacao')
 // Importe suas outras dependências e funções aqui
 
 // Função que verifica os agendamentos do dia seguinte e envia alertas
@@ -68,9 +69,17 @@ async function verificarAgendamentosESendAlerts(sessionId) {
                
             });
 
-            console.log(nomeProfissional, whatsAppProfissional, nomePaciente, whatsAppPaciente, dataBrasil, horaBrasil, sessionId)
-            await enviarAlertasAgendamento(nomeProfissional, whatsAppProfissional, nomePaciente, whatsAppPaciente, dataBrasil, horaBrasil, sessionId);
-        }
+            if (sessionId == "notificacao") {
+                const data = agendamento.dataHora
+                await salvarNotificacao(nomeProfissional, nomePaciente, whatsAppPaciente, data, sessionId);
+                
+            }else{
+                console.log(nomeProfissional, whatsAppProfissional, nomePaciente, whatsAppPaciente, dataBrasil, horaBrasil, sessionId)
+                await enviarAlertasAgendamento(nomeProfissional, whatsAppProfissional, nomePaciente, whatsAppPaciente, dataBrasil, horaBrasil, sessionId);
+            
+            }
+
+            }
     } catch (error) {
         console.error('Erro ao verificar agendamentos:', error);
     }

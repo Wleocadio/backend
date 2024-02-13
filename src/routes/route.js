@@ -8,6 +8,9 @@ const usuarioController = require('../auth/usuarioController')
 const verificaToken = require('../middleware/validaToken')
 const fotoPerfilController = require('../controllers/fotoPerfilController')
 const esquecisenhaController = require('../controllers/envioControllers')
+const notificacaoController = require('../controllers/notificacaoControllers')
+
+
 
 const multer = require('multer');
 const storage = multer.memoryStorage();
@@ -87,6 +90,12 @@ router.get('/prontuarioCount', verificaToken, (req, res) => {
 router.get('/fotoPerfil/:profissionalId', verificaToken,
     fotoPerfilController.obterFotoPerfil)
 
+router.get('/notificacao', verificaToken,
+    notificacaoController.obterNotificacao)//adicionar no swagger
+router.get('/notificacaoProfissional/:profissionalId', verificaToken, (req,res) =>{
+    notificacaoController.obterNotificacaoProfissional(req,res)
+})//adicionar no swagger
+
 
 //Rota para criar
 router.post('/criarProfissional', profissionalController.criarProfissional);
@@ -126,6 +135,10 @@ router.patch('/atualizarAgendamento/:agendamentoId', verificaToken, (req, res) =
     agendamentoController.atualizarAgendamento(req, res)
 
 })
+router.patch('/notificacaoStatus/:notificacaoId', verificaToken, (req, res) =>{
+    notificacaoController.atualizarNotificacaoProfissional(req, res)
+})//adicionar no swagger
+
 router.patch('/recuperarSenha', usuarioController.recuperarSenha)// adicionar no swagger
 
 //Rota Login

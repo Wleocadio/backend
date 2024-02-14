@@ -15,26 +15,33 @@ exports.criarAgendamento = async (req, res) => {
         Prescrições
     } = req.body;
 
+
     // --- Validações --
+
+    const verificaProfissionail = await Profissional.findById(profissionalId)
+
+    if (verificaProfissionail == null) {
+        return res.status(404).json({ Mensagem: 'Profissional não existe.' })
+    }
+
+    const verificaPaciente = await Paciente.findById(pacienteId)
+
+    if (verificaPaciente == null) {
+        return res.status(404).json({ Mensagem: 'Paciente não existe.' })
+    }
     //Verifica se já existe essa data registrada no banco
-    const verificaDataHora = await Agendamento.findOne({ dataHora })
+    const verificaDataHora = await Agendamento.findOne({
+        dataHora: dataHora,
+        profissionalId: profissionalId
+      });
     if (verificaDataHora) {
         return res.status(500).json({ Mensagem: 'Já existe agendamento nessa data.' })
     }
 
+
+
     // Verifica se o Profissional e o Paciente informados existem no banco de dados.
-    try {
-        const verificaProfissional = await Profissional.findById(profissionalId);
-        //console.log(verificaProfissional)
-        try {
-            const verificaPaciente = await Paciente.findById(pacienteId);
-            // console.log(verificaPaciente)
-        } catch (error) {
-            return res.status(404).json({ Mensagem: 'Paciente não encontrado!' })
-        }
-    } catch (error) {
-        return res.status(404).json({ Mensagem: 'Profissional não encontrado!' })
-    }
+
 
     try {
         const novoAgendamento = new Agendamento({
@@ -113,37 +120,37 @@ exports.contarDocumentoAgendamento = async (req, res) => {
 exports.atualizarAgendamento = async (req, res) => {
     const agendamentoId = req.params.agendamentoId
     try {
-       // console.log(agendamentoId)
+        // console.log(agendamentoId)
         const agendamento = await Agendamento.findById(agendamentoId);
-    if (agendamento == "") {
-        return res.status(404).json({ Mensagem: 'Não existe agendamento.' })
-    }
-    const {
-        dataHora,
-        // profissionalId, // Referência ao Profissional.,
-        pacienteId, // Referência ao Profissional.
-        statusConsulta,
-        Observações,
-        Prescrições
-    } = req.body;
+        if (agendamento == "") {
+            return res.status(404).json({ Mensagem: 'Não existe agendamento.' })
+        }
+        const {
+            dataHora,
+            // profissionalId, // Referência ao Profissional.,
+            pacienteId, // Referência ao Profissional.
+            statusConsulta,
+            Observações,
+            Prescrições
+        } = req.body;
 
-    const verificaDataHora = await Agendamento.findOne({ dataHora })
-    if (verificaDataHora) {
-        return res.status(500).json({ Mensagem: 'Já existe agendamento nessa data.' })
-    }
+        const verificaDataHora = await Agendamento.findOne({ dataHora })
+        if (verificaDataHora) {
+            return res.status(500).json({ Mensagem: 'Já existe agendamento nessa data.' })
+        }
 
-    await Agendamento.findByIdAndUpdate(agendamentoId, {
-        dataHora,
-        pacienteId, // Referência ao Profissional.
-        statusConsulta,
-        Observações,
-        Prescrições
-    })
-    return res.status(200).json({ Mensagem: 'Agendamento atualizado com sucesso' })
+        await Agendamento.findByIdAndUpdate(agendamentoId, {
+            dataHora,
+            pacienteId, // Referência ao Profissional.
+            statusConsulta,
+            Observações,
+            Prescrições
+        })
+        return res.status(200).json({ Mensagem: 'Agendamento atualizado com sucesso' })
     } catch (error) {
-        return res.status(500).json({Mensagem: 'Erro ao atualizar agendamento.'})
+        return res.status(500).json({ Mensagem: 'Erro ao atualizar agendamento.' })
     }
-    
+
 
 
 }

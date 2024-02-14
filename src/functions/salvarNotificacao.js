@@ -11,7 +11,15 @@ async function salvarNotificacao(nomeProfissional, nomePaciente, whatsAppPacient
     const paciente = await Paciente.findOne({nomeCompleto: nomePaciente})
     const profissionalId = profissional._id
     const pacienteId = paciente._id
-  
+  /*
+    if (condition) {
+        opção no front habilitada para receber email.
+        validar se vai receber por email
+    }
+
+*/
+
+
     try {
      
         const novaNotificacao = new Notificacao({
@@ -19,7 +27,7 @@ async function salvarNotificacao(nomeProfissional, nomePaciente, whatsAppPacient
             profissionalId: profissionalId, // Referência ao Profissional.,
             pacienteId: pacienteId, // Referência ao Profissional.
             dataHoraConsulta: data,
-            statusNotificacao: 'Lida'
+            statusNotificacao: 'Entregue'
         });
         await novaNotificacao.save();
         console.log('Notificação Salva')

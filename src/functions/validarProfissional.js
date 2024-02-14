@@ -44,8 +44,6 @@ async function validarDadosProfissional(Profissional, { Contato, documento, ende
     
         // Verifica o tipo de documento e se está no formato válido.
         if (documento.tipo !== 'CPF' && documento.tipo !== 'CNPJ') {
-            console.log(documento.tipo)
-            console.log(cpf, cnpj)
             return res.status(400).json({ Mensagem: 'Tipo de documento inválido.' })
         }
     

@@ -160,7 +160,6 @@ exports.criarProfissional = async (req, res) => {
         nomeCompleto,
         documento,
         registroProfissional,
-       // acesso,
         perfilAcessoId,
         descricao,
         Contato,
@@ -177,11 +176,11 @@ exports.criarProfissional = async (req, res) => {
         avaliacoes,
         quantidadesAtendimentos
     } = req.body;
-//console.log(nomeCompleto)
+
     const validacao = await validarDadosProfissional(Profissional, { Contato, documento, endereco, registroProfissional, valorConsulta, quantidadesAtendimentos, tempoSessao }, res);
     if (validacao) {
         return validacao; // Retorna a resposta da validação, se houver algum erro
-    }
+   }
 
     try {
 
@@ -196,7 +195,6 @@ exports.criarProfissional = async (req, res) => {
             nomeCompleto,
             documento,
             registroProfissional,
-            //acesso,
             perfilAcessoId,
             descricao,
             Contato,

@@ -1,4 +1,4 @@
-# Backend da Projeto
+# Backend do Projeto
 Este é o repositório do backend para o projeto. Ele fornece a funcionalidade do lado do servidor para a aplicação.
 
 ## Antes de começar, para a aplicação funcionar é necessário:

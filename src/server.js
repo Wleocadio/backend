@@ -1,5 +1,6 @@
 const express = require('express');
 require('dotenv').config();
+const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const mongoose = require('mongoose');
@@ -55,6 +56,11 @@ async function run() {
 }
 run().catch(console.dir);
 */
+app.use(cors({
+  // Permitir que todos os domínios acessem sua API
+  // Para produção, você pode querer restringir isso a domínios específicos
+  origin: '*'
+}));
 app.use(express.json());
 
 // Agendar tarefa para executar diariamente em um horário específico (por exemplo, à meia-noite)

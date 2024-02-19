@@ -68,8 +68,15 @@ exports.obterFotoPerfil = async (req, res) => {
             return res.status(404).json({ Mensagem: 'Foto do perfil não encontrada.' });
         }
         console.log(fotoPerfil)
+        const fotoEmBase64 = fotoPerfil.foto.toString('base64');
+         const imagemDataUrl = `data:image/jpeg;base64,${fotoEmBase64}`
+         return res.status(200).json({ 
+            id: fotoPerfil._id, 
+            idProfissional: fotoPerfil.profissionalId, 
+            imagem: imagemDataUrl 
+        });
        // res.contentType('image/jpeg'); // Ou o formato apropriado da imagem
-        return res.status(200).json(fotoPerfil);
+       // return res.status(200).json(fotoPerfil);
        
     } catch (err) {
         res.status(500).json({ Mensagem: 'Erro ao recuperar a foto' });

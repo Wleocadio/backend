@@ -96,6 +96,8 @@ router.get('/notificacaoProfissional/:profissionalId', verificaToken, (req,res) 
     notificacaoController.obterNotificacaoProfissional(req,res)
 })//adicionar no swagger
 
+router.get('/dadosProfissionais', profissionalController.dadosPublicoProfissional);
+
 
 //Rota para criar
 router.post('/criarProfissional', profissionalController.criarProfissional);

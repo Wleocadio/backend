@@ -1,10 +1,11 @@
 const Profissional = require('../models/profissionalModel');
+const FotoPerfil = require('../models/fotoPerfil');
 //const validarCPF = require('../functions/validacaoCPF');
 //const validarCNPJ = require('../functions/validacaoCNPj');
 //const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
 //const numeroRegex = /^\d+$/;
-const {validarDadosProfissional} = require('../functions/validarProfissional')
-const {validarDadosProfissionalAtualizacao} = require('../functions/atualizaProfissional')
+const { validarDadosProfissional } = require('../functions/validarProfissional')
+const { validarDadosProfissionalAtualizacao } = require('../functions/atualizaProfissional')
 
 // Busca todos os profissionais cadastrados
 exports.obterProfissional = async (req, res) => {
@@ -12,7 +13,7 @@ exports.obterProfissional = async (req, res) => {
         const profissionais = await Profissional.find();
 
         // Verifica se o retorno do banco esta vazio.
-        if (profissionais == "") {
+        if (profissionais.length === 0) {
             return res.status(404).json({ Mensagem: 'Nenhum Profissional encontrado.' })
         }
         // Organizar campos na ordem desejada (exemplo: _id, nomeCompleto, etc..)
@@ -69,6 +70,54 @@ exports.obterProfissional = async (req, res) => {
         res.status(500).json({ Mensagem: 'Erro ao buscar Profissionais.' });
     }
 }
+
+
+exports.dadosPublicoProfissional = async (req, res) => {
+    try {
+        const profissionais = await Profissional.find();
+       
+        if (profissionais.length === 0) {
+            return res.status(404).json({ Mensagem: 'Nenhm Profissional encontrado.' })
+        }
+
+        const dadosProfissionais = [];
+
+        for(profissional of profissionais){
+            const fotoProfissional = await FotoPerfil.findOne({ profissionalId: profissional._id })
+            
+            const { _id, nomeCompleto, descricao, especialidade, experiencia, formacao, descricaoPessoal, politicaRemarcacao, horarioAtendimento, valorConsulta, tempoSessao, redesSociais, avaliacoes, quantidadesAtendimentos } = profissional;
+
+        // Adiciona os dados formatados e a foto ao array
+        dadosProfissionais.push({
+            profissional: {
+                _id,
+                nomeCompleto,
+                descricao,
+                especialidade,
+                experiencia,
+                formacao,
+                descricaoPessoal,
+                politicaRemarcacao,
+                horarioAtendimento,
+                valorConsulta,
+                tempoSessao,
+                redesSociais,
+                avaliacoes,
+                quantidadesAtendimentos
+            },
+                foto: fotoProfissional ? fotoProfissional : 'Foto não encontrada'
+            })
+        }
+
+        res.status(200).json(dadosProfissionais)
+    
+
+    } catch (error) {
+        res.status(500).json({ Mensagem: 'Erro ao buscar Profissionais.' });
+    }
+}
+
+
 
 // Busca pelo Id do profissional
 exports.obterProfissionalId = async (req, res) => {
@@ -180,7 +229,7 @@ exports.criarProfissional = async (req, res) => {
     const validacao = await validarDadosProfissional(Profissional, { Contato, documento, endereco, registroProfissional, valorConsulta, quantidadesAtendimentos, tempoSessao }, res);
     if (validacao) {
         return validacao; // Retorna a resposta da validação, se houver algum erro
-   }
+    }
 
     try {
 
@@ -225,12 +274,12 @@ exports.criarProfissional = async (req, res) => {
 exports.atualizarProfissional = async (req, res) => {
     const profissionalId = req.params.profissionalId
 
-        const profissional = await Profissional.findById(profissionalId);
-        if (!profissional) {
-            return res.status(404).json({ Mensagem: 'Profissional não encontrado' });
-        }
-        //console.log(profissional)
-        const {
+    const profissional = await Profissional.findById(profissionalId);
+    if (!profissional) {
+        return res.status(404).json({ Mensagem: 'Profissional não encontrado' });
+    }
+    //console.log(profissional)
+    const {
         nomeCompleto,
         Contato,
         registroProfissional,
@@ -247,38 +296,38 @@ exports.atualizarProfissional = async (req, res) => {
         redesSociais,
     } = req.body;
 
-    const validacao = await validarDadosProfissionalAtualizacao(Profissional, {Contato, endereco, registroProfissional, valorConsulta, tempoSessao }, res);
-   
+    const validacao = await validarDadosProfissionalAtualizacao(Profissional, { Contato, endereco, registroProfissional, valorConsulta, tempoSessao }, res);
+
     if (validacao) {
-        
-       return validacao; // Retorna a resposta da validação, se houver algum erro
-       
+
+        return validacao; // Retorna a resposta da validação, se houver algum erro
+
     }
 
-        const horariosDeAtendimento = horarioAtendimento.map(horario => ({
-            data: horario.data,
-            horaInicio: horario.horaInicio,
-            horaFim: horario.horaFim,
-            status: horario.status,
-        }));
+    const horariosDeAtendimento = horarioAtendimento.map(horario => ({
+        data: horario.data,
+        horaInicio: horario.horaInicio,
+        horaFim: horario.horaFim,
+        status: horario.status,
+    }));
 
-        await Profissional.findByIdAndUpdate(profissionalId, {
-            nomeCompleto,
-            registroProfissional,
-            descricao,
-            endereco,
-            especialidade,
-            experiencia,
-            formacao,
-            descricaoPessoal,
-            politicaRemarcacao,
-            horarioAtendimento: horariosDeAtendimento,
-            valorConsulta,
-            tempoSessao,
-            redesSociais,
-        });
+    await Profissional.findByIdAndUpdate(profissionalId, {
+        nomeCompleto,
+        registroProfissional,
+        descricao,
+        endereco,
+        especialidade,
+        experiencia,
+        formacao,
+        descricaoPessoal,
+        politicaRemarcacao,
+        horarioAtendimento: horariosDeAtendimento,
+        valorConsulta,
+        tempoSessao,
+        redesSociais,
+    });
 
-        
-        res.status(201).json({Mensagem: 'Profissional atualizado com sucesso'});
-    
+
+    res.status(201).json({ Mensagem: 'Profissional atualizado com sucesso' });
+
 }

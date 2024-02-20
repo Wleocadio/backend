@@ -75,42 +75,48 @@ exports.obterProfissional = async (req, res) => {
 exports.dadosPublicoProfissional = async (req, res) => {
     try {
         const profissionais = await Profissional.find();
-       
+
         if (profissionais.length === 0) {
-            return res.status(404).json({ Mensagem: 'Nenhm Profissional encontrado.' })
+            return res.status(404).json({ Mensagem: 'Nenhum Profissional encontrado.' });
         }
-
-        const dadosProfissionais = [];
-
-        for(profissional of profissionais){
-            const fotoProfissional = await FotoPerfil.findOne({ profissionalId: profissional._id })
-            
-            const { _id, nomeCompleto, descricao, especialidade, experiencia, formacao, descricaoPessoal, politicaRemarcacao, horarioAtendimento, valorConsulta, tempoSessao, redesSociais, avaliacoes, quantidadesAtendimentos } = profissional;
-
-        // Adiciona os dados formatados e a foto ao array
-        dadosProfissionais.push({
-            profissional: {
-                _id,
-                nomeCompleto,
-                descricao,
-                especialidade,
-                experiencia,
-                formacao,
-                descricaoPessoal,
-                politicaRemarcacao,
-                horarioAtendimento,
-                valorConsulta,
-                tempoSessao,
-                redesSociais,
-                avaliacoes,
-                quantidadesAtendimentos
-            },
-                foto: fotoProfissional ? fotoProfissional : 'Foto não encontrada'
-            })
-        }
-
-        res.status(200).json(dadosProfissionais)
     
+        const dadosProfissionais = await Promise.all(profissionais.map(async (profissional) => {
+            let imagemDataUrl // Valor padrão caso não haja foto
+    
+            const fotoProfissional = await FotoPerfil.findOne({ profissionalId: profissional._id });
+            
+            if (fotoProfissional && fotoProfissional.foto) {
+                const fotoEmBase64 = fotoProfissional.foto.toString('base64');
+
+                console.log(imagemDataUrl)
+                imagemDataUrl = `data:image/jpeg;base64,${fotoEmBase64}`;
+                
+            }
+            if (!imagemDataUrl) {
+                imagemDataUrl = 'Foto não encontrada'
+            }
+    
+            // Desestruturação dos dados do profissional diretamente na adição ao array
+            return {
+                _id: profissional._id,
+                nomeCompleto: profissional.nomeCompleto,
+                descricao: profissional.descricao,
+                especialidade: profissional.especialidade,
+                experiencia: profissional.experiencia,
+                formacao: profissional.formacao,
+                descricaoPessoal: profissional.descricaoPessoal,
+                politicaRemarcacao: profissional.politicaRemarcacao,
+                horarioAtendimento: profissional.horarioAtendimento,
+                valorConsulta: profissional.valorConsulta,
+                tempoSessao: profissional.tempoSessao,
+                redesSociais: profissional.redesSociais,
+                avaliacoes: profissional.avaliacoes,
+                quantidadesAtendimentos: profissional.quantidadesAtendimentos,
+                foto: imagemDataUrl// Adiciona a foto convertida ou a mensagem padrão
+            };
+        }));
+    
+        res.status(200).json(dadosProfissionais);
 
     } catch (error) {
         res.status(500).json({ Mensagem: 'Erro ao buscar Profissionais.' });

@@ -84,7 +84,8 @@ exports.dadosPublicoProfissional = async (req, res) => {
 
         for(profissional of profissionais){
             const fotoProfissional = await FotoPerfil.findOne({ profissionalId: profissional._id })
-            
+            const fotoEmBase64 = fotoProfissional.foto.toString('base64');
+         const imagemDataUrl = `data:image/jpeg;base64,${fotoEmBase64}`
             const { _id, nomeCompleto, descricao, especialidade, experiencia, formacao, descricaoPessoal, politicaRemarcacao, horarioAtendimento, valorConsulta, tempoSessao, redesSociais, avaliacoes, quantidadesAtendimentos } = profissional;
 
         // Adiciona os dados formatados e a foto ao array
@@ -105,7 +106,7 @@ exports.dadosPublicoProfissional = async (req, res) => {
                 avaliacoes,
                 quantidadesAtendimentos
             },
-                foto: fotoProfissional ? fotoProfissional : 'Foto não encontrada'
+                foto: imagemDataUrl ? imagemDataUrl : 'Foto não encontrada'
             })
         }
 

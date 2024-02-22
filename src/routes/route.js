@@ -144,7 +144,7 @@ router.patch('/notificacaoStatus/:notificacaoId', verificaToken, (req, res) =>{
 router.patch('/recuperarSenha', usuarioController.recuperarSenha)// adicionar no swagger
 
 //Rota Login
-router.post('/auth/login', usuarioController.login)
+router.post('/auth/signin', usuarioController.login)
 router.post('/esqueciSenha', esquecisenhaController.solicitarSenha)// adicionar no swagger
 
 //Rota para excluir

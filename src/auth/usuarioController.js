@@ -146,7 +146,7 @@ exports.login = async (req, res) => {
         const user = await Acesso.findOne({ usuario });
 
         if (!user) {
-            return res.status(500).json({ Mensagem: 'Usuário não encontrado' })
+            return res.status(404).json({ Mensagem: 'Usuário não encontrado' })
         }
 
         if (user.bloqueio) {

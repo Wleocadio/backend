@@ -141,9 +141,9 @@ exports.recuperarSenha = async (req, res) => {
 
 exports.login = async (req, res) => {
     const { usuario, senha, } = req.body;
-
+    
     try {
-        const user = await Acesso.findOne({ usuario });
+        const user = await Acesso.findOne({ usuario: usuario.toLowerCase() });
 
         if (!user) {
             return res.status(404).json({ Mensagem: 'Usuário não encontrado' })
@@ -157,7 +157,7 @@ exports.login = async (req, res) => {
         const userId = user._id
         const userProfissional = user.profissionalId
         const userUsuario = user.usuario
-        const isMatch = await bcrypt.compare(senha, senhaHash);
+        const isMatch = await bcrypt.compare(senha.toLowerCase(), senhaHash);
         //console.log(isMatch)
         //console.log(senhaHash)
         if (!isMatch) {

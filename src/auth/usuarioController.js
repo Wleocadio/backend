@@ -27,22 +27,38 @@ exports.criarAcesso = async (req, res) => {
 
     const verificaCadastro = await Acesso.findOne({ profissionalId })
     if (verificaCadastro) {
-        return res.status(500).json({ Mensagem: 'Você já tem cadastro.' })
+        return res.status(400).json({ Mensagem: 'Você já tem cadastro.' })
     }
 
-    const verificaUsuario = await Acesso.findOne({ usuario })
+    const verificaUsuario = await Acesso.findOne({ usuario: usuario.toLowerCase() })
     if (verificaUsuario) {
-        return res.status(500).json({ Mensagem: 'Usuário já existe.' })
+        return res.status(400).json({ Mensagem: 'Usuário já existe.' })
     }
 
+    const novoUsuario = usuario.trim().toLowerCase()
+    const novoSenha = senha.trim().toLowerCase()
 
+    //Validação
+    /*
+    const bloqueioError = validateBloqueio(bloqueio);
+    const tentativasError = validateTentativas(tentativas);
+    const planoError = validatePlano(plano);
 
+    if (bloqueioError) {
+        return res.status(400).send({ error: nameError });
+    }
+    if (tentativasError) {
+        return res.status(400).send({ error: nameError });
+    }
+    if (planoError) {
+        return res.status(400).send({ error: nameError });
+    }*/
 
     try {
         const novoAcesso = new Acesso({
             profissionalId, // Referência ao Profissional.,
-            usuario,
-            senha,
+            usuario: novoUsuario,
+            senha: novoSenha,
             bloqueio,
             tentativas,
             plano,
@@ -56,6 +72,36 @@ exports.criarAcesso = async (req, res) => {
 
         res.status(500).json({ Mensagem: 'Erro ao criar Usuário' });
     }
+
+
+/*
+    const validateBloqueio = (bloqueio) => {
+        if (bloqueio != 'false' || bloqueio != 'False') {
+            return "O campo bloqueio é obrigatório (False).";
+        }
+
+        return null; // Retorna null se a validação passar
+    };
+    const validateTentativas = (tentativas) => {
+        if (tentativas != '0') {
+            return "O campo bloqueio é obrigatório (0).";
+        }
+
+        return null; // Retorna null se a validação passar
+    };
+    const validatePlano = (plano) => {
+        if (plano != 'false' || plano != 'False') {
+            return "O campo bloqueio é obrigatório (False).";
+        }
+        if (plano == null || plano.trim() === '') {
+            return "O campo Profissão é obrigatório."
+        }
+        if (plano.length > 10) {
+            return "Campo Profissão deve ter no maximo 15 caracteres!";
+        }
+        return null; // Retorna null se a validação passar
+    };
+    */
 }
 
 
@@ -64,7 +110,7 @@ exports.atualizarAcesso = async (req, res) => {
     const verificaCadastro = await Acesso.findOne({ profissionalId });
 
     if (!verificaCadastro) {
-        return res.status(500).json({ Mensagem: 'Cadastro não encontrado.' });
+        return res.status(401).json({ Mensagem: 'Cadastro não encontrado.' });
     }
 
     const senhaHash = verificaCadastro.senha;
@@ -74,14 +120,14 @@ exports.atualizarAcesso = async (req, res) => {
     const { usuario, senhaAtual, novaSenha } = req.body;
 
     if (usuarioCadastrado !== usuario) {
-        return res.status(400).json({ Mensagem: "Usuário Incorreto." });
+        return res.status(401).json({ Mensagem: "Usuário Incorreto." });
     }
 
     // Compara o valor da senhaAtual com a senhaHash salva no banco
     try {
         const isMatch = await bcrypt.compare(senhaAtual, senhaHash);
         if (!isMatch) {
-            return res.status(400).json({ Mensagem: "Senha Atual Incorreta." });
+            return res.status(401).json({ Mensagem: "Senha Atual Incorreta." });
         }
 
         const senhaCriptografada = await bcrypt.hash(novaSenha, 10);
@@ -100,33 +146,33 @@ exports.atualizarAcesso = async (req, res) => {
 exports.recuperarSenha = async (req, res) => {
     let idUsuario
     const { novaSenha, novaSenhaRepitir, token } = req.body;
-    
+
     //console.log(token)
     try {
-    const decoded = jwt.verify(token, process.env.TokenEmail);
-    idUsuario = decoded._id;
+        const decoded = jwt.verify(token, process.env.TokenEmail);
+        idUsuario = decoded._id;
 
     } catch (error) {
-        return res.status(500).json({Mensagem: 'Token inválido'})
+        return res.status(401).json({ Mensagem: 'Token inválido' })
     }
-    
+
     //console.log(idUsuario)
 
 
     const verificaCadastro = await Acesso.findOne({ profissionalId: idUsuario });
     if (!verificaCadastro) {
-        return res.status(500).json({ Mensagem: 'Cadastro não encontrado.' });
+        return res.status(404).json({ Mensagem: 'Cadastro não encontrado.' });
     }
-    
+
     const idAcesso = verificaCadastro._id;
 
 
     if (novaSenha != novaSenhaRepitir || novaSenhaRepitir != novaSenha) {
-        return res.status(500).json({ Mensagem: 'As senhas são diferentes.' });
+        return res.status(401).json({ Mensagem: 'As senhas são diferentes.' });
     }
 
-  
-    try {     
+
+    try {
         const senhaCriptografada = await bcrypt.hash(novaSenha, 10);
         await Acesso.findByIdAndUpdate(idAcesso, {
             senha: senhaCriptografada,
@@ -141,12 +187,12 @@ exports.recuperarSenha = async (req, res) => {
 
 exports.login = async (req, res) => {
     const { usuario, senha, } = req.body;
-    
+
     try {
-        const user = await Acesso.findOne({ usuario: usuario.toLowerCase() });
+        const user = await Acesso.findOne({ usuario: usuario.trim().toLowerCase() });
 
         if (!user) {
-            return res.status(404).json({ Mensagem: 'Usuário não encontrado' })
+            return res.status(401).json({ Mensagem: 'Usuário não encontrado' })
         }
 
         if (user.bloqueio) {
@@ -157,7 +203,7 @@ exports.login = async (req, res) => {
         const userId = user._id
         const userProfissional = user.profissionalId
         const userUsuario = user.usuario
-        const isMatch = await bcrypt.compare(senha.toLowerCase(), senhaHash);
+        const isMatch = await bcrypt.compare(senha.trim().toLowerCase(), senhaHash);
         //console.log(isMatch)
         //console.log(senhaHash)
         if (!isMatch) {
@@ -170,7 +216,7 @@ exports.login = async (req, res) => {
             }
 
             await user.save();
-            return res.status(400).json({ Mensagem: "Senha Atual Incorreta. Tentativas restantes: " + (3 - user.tentativas) });
+            return res.status(401).json({ Mensagem: "Senha atual incorreta. Tentativas restantes: " + (3 - user.tentativas) });
         }
 
         // Reset tentativas de login após login bem-sucedido

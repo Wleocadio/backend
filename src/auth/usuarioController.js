@@ -104,7 +104,6 @@ exports.criarAcesso = async (req, res) => {
     */
 }
 
-
 exports.atualizarAcesso = async (req, res) => {
     const profissionalId = req.params.profissionalId;
     const verificaCadastro = await Acesso.findOne({ profissionalId });
@@ -202,8 +201,10 @@ exports.login = async (req, res) => {
         const senhaHash = user.senha
         const userId = user._id
         const userProfissional = user.profissionalId
+        const alteraProfissional = await Profissional.findById({_id: userProfissional})
         const userUsuario = user.usuario
         const isMatch = await bcrypt.compare(senha.trim().toLowerCase(), senhaHash);
+        //console.log(alteraProfissional.online)
         //console.log(isMatch)
         //console.log(senhaHash)
         if (!isMatch) {
@@ -221,12 +222,32 @@ exports.login = async (req, res) => {
 
         // Reset tentativas de login após login bem-sucedido
         user.tentativas = 0;
+        alteraProfissional.online = true
         await user.save();
-
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '3h' })
+        await alteraProfissional.save()
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' })
 
         // console.log(token)
         res.status(200).json({ Mensagem: 'Login efetuado com Sucesso.', userId, userProfissional, userUsuario, token });
+    } catch (err) {
+        res.status(500).json({ Mensagem: 'Erro ao processar a solicitação.' });
+    }
+
+}
+
+exports.logoff = async (req, res) => {
+    const profissionalId = req.params.profissionalId;
+    const verificaProfissional = await Profissional.findById(profissionalId)
+    if (verificaProfissional.length === 0) {
+        return res.status(404).json({ Mensagem: 'Nenhum Profissional encontrado.' })
+    }
+    try {
+    
+        verificaProfissional.online = false
+    
+        await verificaProfissional.save()
+
+        res.status(200).json({ Mensagem: 'Logoff efetuado com Sucesso.'});
     } catch (err) {
         res.status(500).json({ Mensagem: 'Erro ao processar a solicitação.' });
     }

@@ -25,6 +25,7 @@ const profissionalSchema = new mongoose.Schema({
         tipo: { type: String, required: true },
         numeroRegistro: { type: String, required: true }
     },
+    online:{type: Boolean, default: false, required: true},
     
     //acesso: acessoSchema,
     perfilAcessoId: { type: mongoose.Schema.Types.ObjectId, ref: 'PerfilAcesso' }, // Referência ao Perfil de acesso.

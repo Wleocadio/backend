@@ -22,6 +22,7 @@ exports.obterProfissional = async (req, res) => {
                 nomeCompleto,
                 documento,
                 registroProfissional,
+                online,
                 acesso,
                 perfilAcessoId,
                 descricao,
@@ -44,6 +45,7 @@ exports.obterProfissional = async (req, res) => {
                 nomeCompleto,
                 documento,
                 registroProfissional,
+                online,
                 acesso,
                 perfilAcessoId,
                 descricao,
@@ -88,9 +90,9 @@ exports.dadosPublicoProfissional = async (req, res) => {
             if (fotoProfissional && fotoProfissional.foto) {
                 const fotoEmBase64 = fotoProfissional.foto.toString('base64');
 
-                console.log(imagemDataUrl)
-                imagemDataUrl = `data:image/jpeg;base64,${fotoEmBase64}`;
                 
+                imagemDataUrl = `data:image/jpeg;base64,${fotoEmBase64}`;
+                //console.log(imagemDataUrl)
             }
             if (!imagemDataUrl) {
                 imagemDataUrl = 'Foto não encontrada'
@@ -100,6 +102,7 @@ exports.dadosPublicoProfissional = async (req, res) => {
             return {
                 _id: profissional._id,
                 nomeCompleto: profissional.nomeCompleto,
+                online: profissional.online,
                 descricao: profissional.descricao,
                 especialidade: profissional.especialidade,
                 experiencia: profissional.experiencia,
@@ -139,6 +142,7 @@ exports.obterProfissionalId = async (req, res) => {
                 nomeCompleto,
                 documento,
                 registroProfissional,
+                online,
                 acesso,
                 perfilAcessoId,
                 descricao,
@@ -161,6 +165,7 @@ exports.obterProfissionalId = async (req, res) => {
                 nomeCompleto,
                 documento,
                 registroProfissional,
+                online,
                 acesso,
                 perfilAcessoId,
                 descricao,
@@ -215,6 +220,7 @@ exports.criarProfissional = async (req, res) => {
         nomeCompleto,
         documento,
         registroProfissional,
+        online,
         perfilAcessoId,
         descricao,
         Contato,
@@ -250,6 +256,7 @@ exports.criarProfissional = async (req, res) => {
             nomeCompleto,
             documento,
             registroProfissional,
+            online,
             perfilAcessoId,
             descricao,
             Contato,
@@ -289,6 +296,7 @@ exports.atualizarProfissional = async (req, res) => {
         nomeCompleto,
         Contato,
         registroProfissional,
+        online,
         descricao,
         endereco,
         especialidade,
@@ -320,6 +328,7 @@ exports.atualizarProfissional = async (req, res) => {
     await Profissional.findByIdAndUpdate(profissionalId, {
         nomeCompleto,
         registroProfissional,
+        online,
         descricao,
         endereco,
         especialidade,

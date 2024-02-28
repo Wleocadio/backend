@@ -108,6 +108,79 @@
               }
             }
           },
+          "/esqueciSenha": {
+            "post": {
+              "tags": ["Login"],
+              "summary": "Solicita redefinição de senha",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string",
+                          "format": "email"
+                        }
+                      },
+                      "required": ["email"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Email de redefinição de senha enviado com sucesso"
+                },
+                "400": {
+                  "description": "Email inválido fornecido"
+                },
+                "404": {
+                  "description": "Email não encontrado"
+                }
+              }
+            }
+          },
+          "/recuperarSenha": {
+            "post": {
+              "tags": ["Login"],
+              "summary": "Recupera a senha do usuário",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "novaSenha": {
+                          "type": "string"
+                        },
+                        "novaSenhaRepetir": {
+                          "type": "string"
+                        },
+                        "token": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["novaSenha", "novaSenhaRepetir", "token"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Senha recuperada com sucesso"
+                },
+                "400": {
+                  "description": "Dados inválidos fornecidos"
+                },
+                "401": {
+                  "description": "Token inválido fornecido"
+                }
+              }
+            }
+          },
           "/auth/login": {
             "post": {
               "tags": ["Login"],
@@ -157,6 +230,50 @@
               }
             }
           },
+          "/logoff/{profissionalId}": {
+            "post": {
+              "tags": ["Login"],
+              "summary": "Faz o logoff de um usuário",
+              "parameters": [
+                {
+                  "name": "profissionalId",
+                  "in": "path",
+                  "required": true,
+                  "description": "Identificador único do profissional",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "headers": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["token"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Logoff realizado com sucesso"
+                },
+                "400": {
+                  "description": "Token inválido fornecido"
+                },
+                "404": {
+                  "description": "Profissional não encontrado"
+                }
+              }
+            }
+          },
       "/criarProfissional": {
         "post": {
             "tags": ["Profissional"],
@@ -165,9 +282,7 @@
             "required": true,
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Profissional"
-                },
+                
                 "examples": {
                   "exemploProfissional": {
                     "summary": "Exemplo de novo profissional",
@@ -401,6 +516,123 @@
             },
             "404": {
               "description": "Profissional não encontrado"
+            }
+          }
+        }
+      },
+      "/notificacaoProfissional/{profissionalId}": {
+        "get": {
+          "tags": ["Notificações"],
+          "summary": "Lista as notificações de um profissional",
+          "parameters": [
+            {
+              "name": "profissionalId",
+              "in": "path",
+              "required": true,
+              "description": "Identificador único do profissional",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Lista de notificações obtida com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "mensagem": {
+                          "type": "string"
+                        },
+                        "data": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Profissional não encontrado"
+            }
+          }
+        }
+      },
+      "/notificacaoStatus/{notificacaoId}": {
+        "get": {
+          "tags": ["Notificações"],
+          "summary": "Obtém o status de uma notificação",
+          "parameters": [
+            {
+              "name": "notificacaoId",
+              "in": "path",
+              "required": true,
+              "description": "Identificador único da notificação",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Status da notificação obtido com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "status": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Notificação não encontrada"
+            }
+          }
+        }
+      },
+      "/notificacao": {
+        "get": {
+          "tags": ["Notificações"],
+          "summary": "Cria uma nova notificação",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string"
+                    },
+                    "destinatarioId": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["mensagem", "destinatarioId"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Notificação criada com sucesso"
+            },
+            "400": {
+              "description": "Dados inválidos fornecidos"
             }
           }
         }

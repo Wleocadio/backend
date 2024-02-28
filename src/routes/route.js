@@ -88,10 +88,10 @@ router.get('/fotoPerfil/:profissionalId', validaToken,
     fotoPerfilController.obterFotoPerfil)
 
 router.get('/notificacao', validaToken,
-    notificacaoController.obterNotificacao)//adicionar no swagger
+    notificacaoController.obterNotificacao)
 router.get('/notificacaoProfissional/:profissionalId', validaToken, (req,res) =>{
     notificacaoController.obterNotificacaoProfissional(req,res)
-})//adicionar no swagger
+})
 
 router.get('/dadosProfissionais', profissionalController.dadosPublicoProfissional);
 
@@ -136,16 +136,16 @@ router.patch('/atualizarAgendamento/:agendamentoId', validaToken, (req, res) => 
 })
 router.patch('/notificacaoStatus/:notificacaoId', validaToken, (req, res) =>{
     notificacaoController.atualizarNotificacaoProfissional(req, res)
-})//adicionar no swagger
+})
 
-router.patch('/recuperarSenha', usuarioController.recuperarSenha)// adicionar no swagger
+router.patch('/recuperarSenha', usuarioController.recuperarSenha)
 
 //Rota Login
 router.post('/auth/signin', usuarioController.login)
 router.post('/logoff/:profissionalId', validaToken,(req, res) =>{
-    usuarioController.logoff(req, res) }) // adicionar no wagger
+    usuarioController.logoff(req, res) })
 
-router.post('/esqueciSenha', esquecisenhaController.solicitarSenha)// adicionar no swagger
+router.post('/esqueciSenha', esquecisenhaController.solicitarSenha)
 
 //Rota para excluir
 

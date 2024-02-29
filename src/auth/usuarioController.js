@@ -202,6 +202,7 @@ exports.login = async (req, res) => {
         const userId = user._id
         const userProfissional = user.profissionalId
         const alteraProfissional = await Profissional.findById({_id: userProfissional})
+        const nomeUsuario = alteraProfissional.nomeCompleto
         const userUsuario = user.usuario
         const isMatch = await bcrypt.compare(senha.trim().toLowerCase(), senhaHash);
         //console.log(alteraProfissional.online)
@@ -228,7 +229,7 @@ exports.login = async (req, res) => {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' })
 
         // console.log(token)
-        res.status(200).json({ Mensagem: 'Login efetuado com Sucesso.', userId, userProfissional, userUsuario, token });
+        res.status(200).json({ Mensagem: 'Login efetuado com Sucesso.', userId, userProfissional,nomeUsuario, userUsuario, token });
     } catch (err) {
         res.status(500).json({ Mensagem: 'Erro ao processar a solicitação.' });
     }

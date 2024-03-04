@@ -1,20 +1,19 @@
 const nodemailer = require('nodemailer')
 const jwt = require('jsonwebtoken');
-const SMTP_CONFIG = require('../config/smtp')
 const Profissional = require('../models/profissionalModel');
 require('dotenv').config();
-const pass = process.env.Senha
+
 const transporter = nodemailer.createTransport({
 
-    host: SMTP_CONFIG.host,
+    host: process.env.SMTP_HOST,
     secureConnection: false,
-    port: SMTP_CONFIG.port,
+    port: process.env.SMTP_PORT,
     tls: {
         ciphers: 'SSLv3'
     },
     auth: {
-        user: SMTP_CONFIG.user,
-        pass: pass
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
 
     },
 
@@ -32,13 +31,20 @@ function gerarToken(id) {
 }
 
 exports.solicitarSenha = async (req, res) => {
+
     const { email } = req.body;
-    const usuario = await Profissional.findOne({ 'Contato.email': email });
+    
+    const usuario = await Profissional.findOne({ 'Contato.email': email.toLowerCase() });
+
+    if (usuario == "" || usuario == null) {
+        return res.status(404).json({ Mensagem: 'E-mail não encontrado' });
+    }
+    console.log(usuario)
+    console.log(email)
     const emailUsuario = usuario.Contato.email
     const id = usuario._id
 
-    console.log(email)
-    console.log(id)
+
 
     if (emailUsuario == "") {
         return res.status(404).json({ Mensagem: 'E-mail não encontrado' });
@@ -48,16 +54,16 @@ exports.solicitarSenha = async (req, res) => {
         // Aqui, você deve gerar um token único e salvar na base de dados
         // associado ao e-mail do usuário. Exemplo simplificado:
         const token = gerarToken(id);
-        const linkAlteracao = `http://seuwebsite.com/alterar-senha?token=${token}`;
-        console.log(token)
-       
-        /*     await transporter.sendMail({
-                 from: 'Alterar senha <wleocadio_@outlook.com>',
-                 to: emailUsuario,
-                 subject: 'Alteração de Senha',
-                 html: `<p>Para alterar sua senha, clique no link abaixo:</p><a href="${linkAlteracao}">Alterar Senha</a>`
-             });
-     */
+        const linkAlteracao = `http://localhost:3000/password?token=${token}`;
+
+
+        await transporter.sendMail({
+            from: 'Alterar senha <wleocadio_@outlook.com>',
+            to: emailUsuario,
+            subject: 'Alteração de Senha',
+            html: `<p>Para alterar sua senha, clique no link abaixo:</p><a href="${linkAlteracao}">Altere sua Senha</a>`
+        });
+
         res.status(200).json({ Mensagem: 'E-mail de alteração de senha enviado.', token });
     } catch (error) {
         console.error('Erro ao enviar e-mail de alteração de senha:', error);

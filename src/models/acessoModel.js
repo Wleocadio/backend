@@ -4,12 +4,12 @@ const bcrypt = require('bcrypt')
 
 const acessoSchema = new mongoose.Schema({
 
-    profissionalId: { type: mongoose.Schema.Types.ObjectId, ref: 'Profissional', required: true  }, // Referência ao Profissional.,
-    usuario: { type: String },
+    profissionalId: { type: mongoose.Schema.Types.ObjectId, ref: 'Profissional', required: true }, // Referência ao Profissional.,
+    usuario: { type: String, unique: true, lowercase: true },
     senha: { type: String },
     bloqueio: { type: Boolean, default: false },
     tentativas: { type: Number, default: 0 },
-    plano: { type: String, default: 'Sem Plano'},
+    plano: { type: String, default: 'Sem Plano' },
 
 })
 

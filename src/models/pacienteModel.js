@@ -21,7 +21,7 @@ const pacienteSchema = new mongoose.Schema({
     sexo: { type: String },
     endereco: enderecoSchema, // Schema de endereço
     //acesso: acessoSchema, //Schema de acesso
-    email: { type: String },
+    email: { type: String, unique: true, lowercase: true },
     contato: { type: Number },
     whatsApp: { type: Number },
     contatoEmergencia: { type: Number },

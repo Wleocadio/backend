@@ -6,12 +6,12 @@ module.exports ={
     user:process.env.user,
     pass:process.env.pass
 
-};
+}; 
 /*
 module.exports ={
     host:"smtp-mail.outlook.com",
     port:587,
     user:"wleocadio_@outlook.com",
-    pass:"ssss"
+    pass:"Master159987***"
 
 };*/

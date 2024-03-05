@@ -55,13 +55,14 @@ exports.solicitarSenha = async (req, res) => {
         // associado ao e-mail do usuário. Exemplo simplificado:
         const token = gerarToken(id);
         const linkAlteracao = `http://localhost:3000/password?token=${token}`;
-
+        const linkAlteracao2 = `https://frontend-nine-roan.vercel.app/password?token=${token}`;
 
         await transporter.sendMail({
             from: 'Alterar senha <wleocadio_@outlook.com>',
             to: emailUsuario,
             subject: 'Alteração de Senha',
-            html: `<p>Para alterar sua senha, clique no link abaixo:</p><a href="${linkAlteracao}">Altere sua Senha</a>`
+            html: `<p>Para alterar sua senha, clique no link abaixo:</p><a href="${linkAlteracao}">Altere sua Senha Ambiente DEV</a>`,
+            html: `<p>Para alterar sua senha, clique no link abaixo:</p><a href="${linkAlteracao2}">Altere sua Senha Ambiente Publicado</a>`
         });
 
         res.status(200).json({ Mensagem: 'E-mail de alteração de senha enviado.', token });

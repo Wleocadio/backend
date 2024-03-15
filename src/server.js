@@ -66,7 +66,7 @@ app.use(express.json());
 // Agendar tarefa para executar diariamente em um horário específico (por exemplo, à meia-noite)
 const sessionId = "apiwhatsapp";
 const notificacao = "notificacao"
-cron.schedule('0 9 * * *', () => {
+cron.schedule('* * * * *', () => {
     console.log('Verificando agendamentos para hoje...');
     //verificarAgendamentosESendAlerts(sessionId); //- desabilitado a verificação da agenda
     verificarAgendamentosESendAlerts(notificacao); // verifica chamada para verificar agendamento

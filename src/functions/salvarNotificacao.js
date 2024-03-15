@@ -26,6 +26,7 @@ async function salvarNotificacao(nomeProfissional, nomePaciente, whatsAppPacient
             
             profissionalId: profissionalId, // Referência ao Profissional.,
             pacienteId: pacienteId, // Referência ao Profissional.
+            tipo: 'Consulta Agendada',
             dataHoraConsulta: data,
             statusNotificacao: 'Entregue'
         });

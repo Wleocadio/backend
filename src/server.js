@@ -56,11 +56,13 @@ async function run() {
 }
 run().catch(console.dir);
 */
-app.use(cors({
-  // Permitir que todos os domínios acessem sua API
-  // Para produção, você pode querer restringir isso a domínios específicos
-  origin: '*'
-}));
+const corsOptions = {
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'], // Adicione todos os métodos que você deseja permitir
+  origin: '*', // Substitua '*' pelo domínio do cliente se desejar restringir
+  optionsSuccessStatus: 200 // para navegadores legados que usam XMLHttpRequest para CORS
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Agendar tarefa para executar diariamente em um horário específico (por exemplo, à meia-noite)

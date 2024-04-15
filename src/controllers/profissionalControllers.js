@@ -343,6 +343,6 @@ exports.atualizarProfissional = async (req, res) => {
     });
 
 
-    res.status(201).json({ Mensagem: 'Profissional atualizado com sucesso' });
+    res.status(200).json({ Mensagem: 'Profissional atualizado com sucesso' });
 
 }

@@ -102,6 +102,7 @@ exports.dadosPublicoProfissional = async (req, res) => {
             return {
                 _id: profissional._id,
                 nomeCompleto: profissional.nomeCompleto,
+                registroProfissional:profissional.registroProfissional,
                 online: profissional.online,
                 descricao: profissional.descricao,
                 especialidade: profissional.especialidade,
